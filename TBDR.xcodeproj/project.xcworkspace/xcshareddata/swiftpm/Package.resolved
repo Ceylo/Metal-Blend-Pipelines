@@ -1,0 +1,15 @@
+{
+  "originHash" : "041dd7eaa42832759ee1bff202e33e12292dd5e51421938398561e52536aec66",
+  "pins" : [
+    {
+      "identity" : "metal-math",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Zehua-Chen/metal-math.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "e199f8517e36b77f17bcee55c38e804e56aa5ec7"
+      }
+    }
+  ],
+  "version" : 3
+}
