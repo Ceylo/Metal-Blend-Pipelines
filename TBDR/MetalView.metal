@@ -11,7 +11,7 @@
 using namespace metal;
 
 vertex Vertex vertexFunc(unsigned int vertexId [[vertex_id]],
-                         constant Vertex* vertices [[buffer(0)]]) {
+                         device const Vertex* vertices [[buffer(0)]]) {
     return vertices[vertexId];
 }
 
