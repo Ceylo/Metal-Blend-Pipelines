@@ -29,7 +29,7 @@ class MetalHelper {
         
         self.layers = (0..<Self.layerCount).map { i in
             let cat = try! loader
-                .newTexture(name: "Isidor", scaleFactor: 1, bundle: nil, options: textureOptions)
+                .newTexture(name: "block_\(i)", scaleFactor: 1, bundle: nil, options: textureOptions)
             cat.label = "Isidor #\(i)"
             return cat
         }
@@ -70,5 +70,40 @@ extension MTLComputeCommandEncoder {
         let threadsPerThreadgroup = MTLSizeMake(w, h, 1)
         let threadsPerGrid = MTLSize(width: texture.width, height: texture.height, depth: 1)
         dispatchThreads(threadsPerGrid, threadsPerThreadgroup: threadsPerThreadgroup)
+    }
+}
+
+import SwiftImage
+
+func generateLayers() {
+    let layerCount = 50
+    let width = 4000
+    let height = 2000
+    let pixelPerBlock = (width * height) / layerCount
+    let blockSize = Int(floor(sqrt(Float(pixelPerBlock))))
+    
+    for blockIndex in 0..<layerCount {
+        let blocksPerLine = width / blockSize
+        let yStart = (blockIndex / blocksPerLine) * blockSize
+        let xStart = (blockIndex % blocksPerLine) * blockSize
+        
+        let img = Image<RGBA<UInt8>>(width: width, height: height) { x, y in
+            if x >= xStart && x < xStart + blockSize &&
+                y >= yStart && y < yStart + blockSize {
+                switch (x % 2, y % 2) {
+                case (0, 0): return .init(red: 255, green: 0, blue: 0, alpha: 255)
+                case (0, 1): return .init(red: 0, green: 255, blue: 0, alpha: 255)
+                case (1, 1): return .init(red: 0, green: 0, blue: 255, alpha: 255)
+                case (1, 0): return .init(gray: 0, alpha: 0)
+                case (_, _):
+                    fatalError()
+                }
+            } else {
+                return .init(gray: 0, alpha: 0)
+            }
+        }
+        let url = URL.temporaryDirectory.appending(component: "block_\(blockIndex).png")
+        print(url)
+        try! img.write(to: url, atomically: true, format: .png)
     }
 }

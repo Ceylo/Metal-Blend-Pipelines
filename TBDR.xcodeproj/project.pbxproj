@@ -12,6 +12,7 @@
 		8724F5DD2BF4C04800890EAF /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8724F5DC2BF4C04800890EAF /* Preview Assets.xcassets */; };
 		8724F5E52BF4C06400890EAF /* RenderPipelineRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8724F5E42BF4C06400890EAF /* RenderPipelineRenderer.swift */; };
 		8724F5E72BF4C7CD00890EAF /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 8724F5E62BF4C7CD00890EAF /* Shaders.metal */; };
+		879B8AEF2BFBA8E800D06497 /* SwiftImage in Frameworks */ = {isa = PBXBuildFile; productRef = 879B8AEE2BFBA8E800D06497 /* SwiftImage */; };
 		87AC36F62BF7B5D9007A65E6 /* ComputePipelineRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87AC36F52BF7B5D9007A65E6 /* ComputePipelineRenderer.swift */; };
 		87AC36FA2BFB6681007A65E6 /* MetalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87AC36F92BFB6681007A65E6 /* MetalView.swift */; };
 		87AC36FC2BFB7773007A65E6 /* MetalHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87AC36FB2BFB7773007A65E6 /* MetalHelper.swift */; };
@@ -37,6 +38,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				879B8AEF2BFBA8E800D06497 /* SwiftImage in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -102,6 +104,7 @@
 			);
 			name = TBDR;
 			packageProductDependencies = (
+				879B8AEE2BFBA8E800D06497 /* SwiftImage */,
 			);
 			productName = TBDR;
 			productReference = 8724F5D22BF4C04700890EAF /* TBDR.app */;
@@ -132,6 +135,7 @@
 			);
 			mainGroup = 8724F5C92BF4C04700890EAF;
 			packageReferences = (
+				879B8AED2BFBA8E800D06497 /* XCRemoteSwiftPackageReference "swift-image" */,
 			);
 			productRefGroup = 8724F5D32BF4C04700890EAF /* Products */;
 			projectDirPath = "";
@@ -377,6 +381,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		879B8AED2BFBA8E800D06497 /* XCRemoteSwiftPackageReference "swift-image" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/koher/swift-image.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.7.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		879B8AEE2BFBA8E800D06497 /* SwiftImage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 879B8AED2BFBA8E800D06497 /* XCRemoteSwiftPackageReference "swift-image" */;
+			productName = SwiftImage;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 8724F5CA2BF4C04700890EAF /* Project object */;
 }
