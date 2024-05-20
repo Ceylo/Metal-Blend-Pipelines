@@ -12,7 +12,6 @@
 		8724F5DD2BF4C04800890EAF /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8724F5DC2BF4C04800890EAF /* Preview Assets.xcassets */; };
 		8724F5E52BF4C06400890EAF /* MetalViewRenderPipeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8724F5E42BF4C06400890EAF /* MetalViewRenderPipeline.swift */; };
 		8724F5E72BF4C7CD00890EAF /* MetalView.metal in Sources */ = {isa = PBXBuildFile; fileRef = 8724F5E62BF4C7CD00890EAF /* MetalView.metal */; };
-		8724F82F2BF4EF8200890EAF /* MetalMath in Frameworks */ = {isa = PBXBuildFile; productRef = 8724F82E2BF4EF8200890EAF /* MetalMath */; };
 		87AC36F62BF7B5D9007A65E6 /* MetalViewComputePipeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87AC36F52BF7B5D9007A65E6 /* MetalViewComputePipeline.swift */; };
 		87AC36FA2BFB6681007A65E6 /* MetalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87AC36F92BFB6681007A65E6 /* MetalView.swift */; };
 		87AC36FC2BFB7773007A65E6 /* MetalHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87AC36FB2BFB7773007A65E6 /* MetalHelper.swift */; };
@@ -38,7 +37,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8724F82F2BF4EF8200890EAF /* MetalMath in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -104,7 +102,6 @@
 			);
 			name = TBDR;
 			packageProductDependencies = (
-				8724F82E2BF4EF8200890EAF /* MetalMath */,
 			);
 			productName = TBDR;
 			productReference = 8724F5D22BF4C04700890EAF /* TBDR.app */;
@@ -135,7 +132,6 @@
 			);
 			mainGroup = 8724F5C92BF4C04700890EAF;
 			packageReferences = (
-				8724F82D2BF4EF8200890EAF /* XCRemoteSwiftPackageReference "metal-math" */,
 			);
 			productRefGroup = 8724F5D32BF4C04700890EAF /* Products */;
 			projectDirPath = "";
@@ -381,25 +377,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		8724F82D2BF4EF8200890EAF /* XCRemoteSwiftPackageReference "metal-math" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/Zehua-Chen/metal-math.git";
-			requirement = {
-				branch = main;
-				kind = branch;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		8724F82E2BF4EF8200890EAF /* MetalMath */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 8724F82D2BF4EF8200890EAF /* XCRemoteSwiftPackageReference "metal-math" */;
-			productName = MetalMath;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 8724F5CA2BF4C04700890EAF /* Project object */;
 }
