@@ -1,5 +1,5 @@
 //
-//  MetalView.metal
+//  Shaders.metal
 //  TBDR
 //
 //  Created by Ceylo on 15/05/2024.
