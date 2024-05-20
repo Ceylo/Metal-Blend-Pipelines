@@ -10,9 +10,9 @@
 		8724F5D62BF4C04700890EAF /* TBDRApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8724F5D52BF4C04700890EAF /* TBDRApp.swift */; };
 		8724F5DA2BF4C04800890EAF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8724F5D92BF4C04800890EAF /* Assets.xcassets */; };
 		8724F5DD2BF4C04800890EAF /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8724F5DC2BF4C04800890EAF /* Preview Assets.xcassets */; };
-		8724F5E52BF4C06400890EAF /* MetalViewRenderPipeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8724F5E42BF4C06400890EAF /* MetalViewRenderPipeline.swift */; };
+		8724F5E52BF4C06400890EAF /* RenderPipelineRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8724F5E42BF4C06400890EAF /* RenderPipelineRenderer.swift */; };
 		8724F5E72BF4C7CD00890EAF /* MetalView.metal in Sources */ = {isa = PBXBuildFile; fileRef = 8724F5E62BF4C7CD00890EAF /* MetalView.metal */; };
-		87AC36F62BF7B5D9007A65E6 /* MetalViewComputePipeline.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87AC36F52BF7B5D9007A65E6 /* MetalViewComputePipeline.swift */; };
+		87AC36F62BF7B5D9007A65E6 /* ComputePipelineRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87AC36F52BF7B5D9007A65E6 /* ComputePipelineRenderer.swift */; };
 		87AC36FA2BFB6681007A65E6 /* MetalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87AC36F92BFB6681007A65E6 /* MetalView.swift */; };
 		87AC36FC2BFB7773007A65E6 /* MetalHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87AC36FB2BFB7773007A65E6 /* MetalHelper.swift */; };
 /* End PBXBuildFile section */
@@ -23,11 +23,11 @@
 		8724F5D92BF4C04800890EAF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8724F5DC2BF4C04800890EAF /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		8724F5DE2BF4C04800890EAF /* TBDR.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TBDR.entitlements; sourceTree = "<group>"; };
-		8724F5E42BF4C06400890EAF /* MetalViewRenderPipeline.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalViewRenderPipeline.swift; sourceTree = "<group>"; };
+		8724F5E42BF4C06400890EAF /* RenderPipelineRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenderPipelineRenderer.swift; sourceTree = "<group>"; };
 		8724F5E62BF4C7CD00890EAF /* MetalView.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = MetalView.metal; sourceTree = "<group>"; };
 		8724F83F2BF4F31400890EAF /* Shared.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Shared.hpp; sourceTree = "<group>"; };
 		8724F8402BF4F45700890EAF /* Bridge.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Bridge.hpp; sourceTree = "<group>"; };
-		87AC36F52BF7B5D9007A65E6 /* MetalViewComputePipeline.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MetalViewComputePipeline.swift; sourceTree = "<group>"; };
+		87AC36F52BF7B5D9007A65E6 /* ComputePipelineRenderer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ComputePipelineRenderer.swift; sourceTree = "<group>"; };
 		87AC36F92BFB6681007A65E6 /* MetalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalView.swift; sourceTree = "<group>"; };
 		87AC36FB2BFB7773007A65E6 /* MetalHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalHelper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -65,8 +65,8 @@
 				8724F5D52BF4C04700890EAF /* TBDRApp.swift */,
 				87AC36F92BFB6681007A65E6 /* MetalView.swift */,
 				87AC36FB2BFB7773007A65E6 /* MetalHelper.swift */,
-				8724F5E42BF4C06400890EAF /* MetalViewRenderPipeline.swift */,
-				87AC36F52BF7B5D9007A65E6 /* MetalViewComputePipeline.swift */,
+				8724F5E42BF4C06400890EAF /* RenderPipelineRenderer.swift */,
+				87AC36F52BF7B5D9007A65E6 /* ComputePipelineRenderer.swift */,
 				8724F5E62BF4C7CD00890EAF /* MetalView.metal */,
 				8724F8402BF4F45700890EAF /* Bridge.hpp */,
 				8724F83F2BF4F31400890EAF /* Shared.hpp */,
@@ -159,11 +159,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8724F5E52BF4C06400890EAF /* MetalViewRenderPipeline.swift in Sources */,
+				8724F5E52BF4C06400890EAF /* RenderPipelineRenderer.swift in Sources */,
 				87AC36FA2BFB6681007A65E6 /* MetalView.swift in Sources */,
 				87AC36FC2BFB7773007A65E6 /* MetalHelper.swift in Sources */,
 				8724F5E72BF4C7CD00890EAF /* MetalView.metal in Sources */,
-				87AC36F62BF7B5D9007A65E6 /* MetalViewComputePipeline.swift in Sources */,
+				87AC36F62BF7B5D9007A65E6 /* ComputePipelineRenderer.swift in Sources */,
 				8724F5D62BF4C04700890EAF /* TBDRApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
