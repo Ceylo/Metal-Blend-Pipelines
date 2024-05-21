@@ -81,8 +81,8 @@ class RenderPipelineRenderer : NSObject, MTLRenderer {
         desc.colorAttachments[0].texture = intermediateImage
         desc.colorAttachments[0].loadAction = .dontCare
         
-        cb.encodeRender("Merge render", descriptor: desc) { encoder in
-            for layer in helper.layers.dropFirst().dropLast() {
+        for layer in helper.layers.dropFirst().dropLast() {
+            cb.encodeRender("Merge render", descriptor: desc) { encoder in
                 encodeBlend(of: input1, and: layer, using: encoder)
                 input1 = intermediateImage
             }
