@@ -81,20 +81,21 @@ func generateLayers() {
     let height = 2000
     let pixelPerBlock = (width * height) / layerCount
     let blockSize = Int(floor(sqrt(Float(pixelPerBlock))))
+    let blocksPerLine = width / blockSize
     
-    for blockIndex in 0..<layerCount {
-        let blocksPerLine = width / blockSize
+    DispatchQueue.concurrentPerform(iterations: layerCount) { blockIndex in
         let yStart = (blockIndex / blocksPerLine) * blockSize
         let xStart = (blockIndex % blocksPerLine) * blockSize
+        let yEnd = yStart + blockSize
+        let xEnd = xStart + blockSize
         
         let img = Image<RGBA<UInt8>>(width: width, height: height) { x, y in
-            if x >= xStart && x < xStart + blockSize &&
-                y >= yStart && y < yStart + blockSize {
-                switch (x % 2, y % 2) {
-                case (0, 0): return .init(red: 255, green: 0, blue: 0, alpha: 255)
-                case (0, 1): return .init(red: 0, green: 255, blue: 0, alpha: 255)
-                case (1, 1): return .init(red: 0, green: 0, blue: 255, alpha: 255)
-                case (1, 0): return .init(gray: 0, alpha: 0)
+            if x >= xStart && x < xEnd && y >= yStart && y < yEnd {
+                switch (x % 8, y % 8) {
+                case (0..<4, 0..<4): return .init(red: 255, green: 0, blue: 0, alpha: 255)
+                case (0..<4, 4..<8): return .init(red: 0, green: 255, blue: 0, alpha: 255)
+                case (4..<8, 4..<8): return .init(red: 0, green: 0, blue: 255, alpha: 255)
+                case (4..<8, 0..<4): return .init(gray: 0, alpha: 0)
                 case (_, _):
                     fatalError()
                 }
