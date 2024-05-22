@@ -73,6 +73,12 @@ extension MTLComputeCommandEncoder {
     }
 }
 
+extension MTLTexture {
+    var size: MTLSize {
+        MTLSize(width: width, height: height, depth: depth)
+    }
+}
+
 import SwiftImage
 
 func generateLayers() {
