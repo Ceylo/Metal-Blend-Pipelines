@@ -28,10 +28,10 @@ class MetalHelper {
         ]
         
         self.layers = (0..<Self.layerCount).map { i in
-            let cat = try! loader
+            let block = try! loader
                 .newTexture(name: "block_\(i)", scaleFactor: 1, bundle: nil, options: textureOptions)
-            cat.label = "Isidor #\(i)"
-            return cat
+            block.label = "Block #\(i)"
+            return block
         }
     }
 }
