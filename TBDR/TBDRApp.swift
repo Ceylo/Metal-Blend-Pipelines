@@ -17,6 +17,7 @@ struct TBDRApp: App {
     
     enum Renderer: String, Hashable, Identifiable, CaseIterable {
         case renderPipeline = "Render Pipeline"
+        case renderPipelineWithTiles = "Render Pipeline + Tile Memory"
         case computePipeline = "Compute Pipeline"
         
         var id: Self { self }
@@ -38,6 +39,8 @@ struct TBDRApp: App {
                 switch displayedRenderer {
                 case .renderPipeline:
                     MetalView<RenderPipelineRenderer>()
+                case .renderPipelineWithTiles:
+                    MetalView<RenderPipelineWithTileMemoryRenderer>()
                 case .computePipeline:
                     MetalView<ComputePipelineRenderer>()
                 }

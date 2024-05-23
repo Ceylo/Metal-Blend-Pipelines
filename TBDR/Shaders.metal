@@ -10,6 +10,8 @@
 
 using namespace metal;
 
+constant constexpr half attenuation = 1.1;
+
 vertex Vertex vertexFunc(unsigned int vertexId [[vertex_id]],
                          device const Vertex* vertices [[buffer(0)]],
                          constant float2& drawableSize [[buffer(1)]],
@@ -27,7 +29,7 @@ fragment half4 fragmentFunc(const Vertex vert [[stage_in]],
     constexpr sampler s(address::clamp_to_zero, filter::linear);
     const auto p1 = tex1.sample(s, vert.texCoord);
     const auto p2 = tex2.sample(s, vert.texCoord);
-    return (p1 + p2) / 2;
+    return (p1 + p2) / attenuation;
 }
 
 kernel void kernelFunc(texture2d<half, access::sample> tex1 [[texture(0)]],
@@ -39,6 +41,69 @@ kernel void kernelFunc(texture2d<half, access::sample> tex1 [[texture(0)]],
     const auto texCoord = float2(gid) + 0.5;
     const auto p1 = tex1.sample(s, texCoord);
     const auto p2 = tex2.sample(s, texCoord);
-    const auto out = (p1 + p2) / 2;
+    const auto out = (p1 + p2) / attenuation;
     output.write(out, gid);
+}
+
+struct FragmentIO {
+    const half4 framebuffer  [[ color(0) ]];
+    const half4 tile1        [[ color(1) ]];
+    const half4 tile2        [[ color(2) ]];
+    
+    FragmentIO(const half4 framebuffer,
+               const half4 tile1,
+               const half4 tile2)
+    : framebuffer(framebuffer)
+    , tile1(tile1)
+    , tile2(tile2)
+    {}
+    
+    half4 ReadTile(int passIndex) {
+        return passIndex % 2 == 0 ? tile1 : tile2;
+    }
+    
+    FragmentIO UpdatingTile(int passIndex, half4 newValue) {
+        if (passIndex % 2 == 0) {
+            return FragmentIO{
+                newValue,
+                tile1,
+                newValue
+            };
+        } else {
+            return FragmentIO{
+                newValue,
+                newValue,
+                tile2
+            };
+        }
+    }
+};
+
+fragment FragmentIO tiledFragmentInit(const Vertex vert [[stage_in]],
+                                      texture2d<half, access::sample> tex1 [[texture(0)]],
+                                      texture2d<half, access::sample> tex2 [[texture(1)]])
+{
+    constexpr sampler s(address::clamp_to_zero, filter::linear);
+    const auto p1 = tex1.sample(s, vert.texCoord);
+    const auto p2 = tex2.sample(s, vert.texCoord);
+    const auto res = (p1 + p2) / attenuation;
+    
+    return FragmentIO{
+        res,
+        res,
+        res
+    };
+}
+
+fragment FragmentIO tiledFragmentFunc(const Vertex vert [[stage_in]],
+                                      texture2d<half, access::sample> tex1 [[texture(0)]],
+                                      constant ushort& passIndex [[buffer(0)]],
+                                      FragmentIO io)
+{
+    constexpr sampler s(address::clamp_to_zero, filter::linear);
+    const auto p1 = tex1.sample(s, vert.texCoord);
+    const auto p2 = io.ReadTile(passIndex);
+    const auto res = (p1 + p2) / attenuation;
+    
+    return io.UpdatingTile(passIndex, res);
 }
