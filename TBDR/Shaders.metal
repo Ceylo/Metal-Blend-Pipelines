@@ -17,7 +17,7 @@ vertex Vertex vertexFunc(unsigned int vertexId [[vertex_id]],
                          constant float2& drawableSize [[buffer(1)]],
                          constant float& yOffset [[buffer(2)]]) {
     Vertex mapped = vertices[vertexId];
-    // Metal origin is bottom left but here we want to draw with top left origin
+    // Framebuffer origin is bottom left but here we want to draw with top left origin
     mapped.position.xy = (mapped.position.xy + float2(0, yOffset)) / (0.5 * drawableSize) - 1;
     return mapped;
 }
@@ -58,11 +58,11 @@ struct FragmentIO {
     , tile2(tile2)
     {}
     
-    half4 ReadTile(int passIndex) {
+    half4 ReadTile(int passIndex) const {
         return passIndex % 2 == 0 ? tile1 : tile2;
     }
     
-    FragmentIO UpdatingTile(int passIndex, half4 newValue) {
+    FragmentIO UpdatingTile(int passIndex, half4 newValue) const {
         if (passIndex % 2 == 0) {
             return FragmentIO{
                 newValue,
@@ -98,7 +98,7 @@ fragment FragmentIO tiledFragmentInit(const Vertex vert [[stage_in]],
 fragment FragmentIO tiledFragmentFunc(const Vertex vert [[stage_in]],
                                       texture2d<half, access::sample> tex1 [[texture(0)]],
                                       constant ushort& passIndex [[buffer(0)]],
-                                      FragmentIO io)
+                                      const FragmentIO io)
 {
     constexpr sampler s(address::clamp_to_zero, filter::linear);
     const auto p1 = tex1.sample(s, vert.texCoord);
