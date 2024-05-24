@@ -19,6 +19,7 @@ struct TBDRApp: App {
         case renderPipeline = "Render Pipeline"
         case renderPipelineWithTiles = "Render Pipeline + Tile Memory"
         case computePipeline = "Compute Pipeline"
+        case coreImagePipeline = "Core Image Pipeline"
         
         var id: Self { self }
     }
@@ -43,6 +44,8 @@ struct TBDRApp: App {
                     MetalView<RenderPipelineWithTileMemoryRenderer>()
                 case .computePipeline:
                     MetalView<ComputePipelineRenderer>()
+                case .coreImagePipeline:
+                    MetalView<CoreImagePipelineRenderer>()
                 }
             }
         }
