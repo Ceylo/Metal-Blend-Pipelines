@@ -17,7 +17,8 @@ class RenderPipelineRenderer : NSObject, MTLRenderer {
     var intermediateImages: [MTLTexture]
     let commandQueue: MTLCommandQueue
     // Make several pipelines states to simulate different blend functions
-    let pipelineStates: [MTLRenderPipelineState]
+    let pipelineStates16f: [MTLRenderPipelineState]
+    let pipelineState8u: MTLRenderPipelineState
     let vertices: MTLBuffer
     let workingSize = MTLSize(width: 4000, height: 2000, depth: 1)
     
@@ -28,7 +29,7 @@ class RenderPipelineRenderer : NSObject, MTLRenderer {
         self.commandQueue = device.makeCommandQueue()!
         
         let textureDesc = MTLTextureDescriptor.texture2DDescriptor(
-            pixelFormat: .bgra8Unorm_srgb,
+            pixelFormat: .rgba16Float,
             width: workingSize.width,
             height: workingSize.height,
             mipmapped: false
@@ -46,13 +47,17 @@ class RenderPipelineRenderer : NSObject, MTLRenderer {
         let library = device.makeDefaultLibrary()!
         desc.vertexFunction = library.makeFunction(name: "vertexFunc")!
         desc.fragmentFunction = library.makeFunction(name: "fragmentFunc")!
-        desc.colorAttachments[0].pixelFormat = drawablePixelFormat
+        desc.colorAttachments[0].pixelFormat = .rgba16Float
         
-        pipelineStates = (0..<10).map { i in
-            desc.label = "Render pipeline #\(i)"
+        pipelineStates16f = (0..<10).map { i in
+            desc.label = "Render pipeline 16f #\(i)"
             let state = try! device.makeRenderPipelineState(descriptor: desc)
             return state
         }
+        
+        desc.label = "Render pipeline 8u"
+        desc.colorAttachments[0].pixelFormat = drawablePixelFormat
+        pipelineState8u = try! device.makeRenderPipelineState(descriptor: desc)
         
         let w = Float(workingSize.width)
         let h = Float(workingSize.height)
@@ -92,14 +97,14 @@ class RenderPipelineRenderer : NSObject, MTLRenderer {
             desc.colorAttachments[0].loadAction = .dontCare
             
             cb.encodeRender("Merge render", descriptor: desc) { encoder in
-                encodeBlend(of: input1, and: layer, using: encoder, drawableSize: intermediateImageSize)
+                encodeBlend(of: input1, and: layer, using: encoder, drawableSize: intermediateImageSize, final: false)
                 input1 = output
             }
         }
         
         cb.encodeRender("Final render", descriptor: renderPass) { encoder in
             let size = renderPass.colorAttachments[0].texture!.size
-            encodeBlend(of: input1, and: helper.layers.last!, using: encoder, drawableSize: size)
+            encodeBlend(of: input1, and: helper.layers.last!, using: encoder, drawableSize: size, final: true)
         }
         
         guard let drawable = view.currentDrawable else {
@@ -113,13 +118,18 @@ class RenderPipelineRenderer : NSObject, MTLRenderer {
         of tex1: MTLTexture,
         and tex2: MTLTexture,
         using encoder: MTLRenderCommandEncoder,
-        drawableSize: MTLSize
+        drawableSize: MTLSize,
+        final: Bool
     ) {
         assert(drawableSize.depth == 1)
         var drawableSizeBytes = float2(Float(drawableSize.width), Float(drawableSize.height))
         var yOffset = Float(drawableSize.height - workingSize.height)
         
-        encoder.setRenderPipelineState(pipelineStates[drawCalls % pipelineStates.count])
+        if final {
+            encoder.setRenderPipelineState(pipelineState8u)
+        } else {
+            encoder.setRenderPipelineState(pipelineStates16f[drawCalls % pipelineStates16f.count])
+        }
         encoder.setVertexBuffer(vertices, offset: 0, index: 0)
         encoder.setVertexBytes(&drawableSizeBytes, length: MemoryLayout<float2>.stride, index: 1)
         encoder.setVertexBytes(&yOffset, length: MemoryLayout<Float>.stride, index: 2)

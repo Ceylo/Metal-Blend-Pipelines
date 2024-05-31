@@ -26,7 +26,7 @@ class ComputePipelineRenderer : NSObject, MTLRenderer {
         self.commandQueue = device.makeCommandQueue()!
         
         let textureDesc = MTLTextureDescriptor.texture2DDescriptor(
-            pixelFormat: .bgra8Unorm_srgb,
+            pixelFormat: .rgba16Float,
             width: 4000,
             height: 2000,
             mipmapped: false
