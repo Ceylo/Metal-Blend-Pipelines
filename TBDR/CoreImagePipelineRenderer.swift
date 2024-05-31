@@ -51,9 +51,14 @@ class CoreImagePipelineRenderer : NSObject, MTLRenderer {
         
         let destination = CIRenderDestination(mtlTexture: drawable.texture, commandBuffer: cb)
         destination.colorSpace = drawableColorSpace
-        destination.isFlipped = true
         let graph = buildRenderingGraph()
-        try! context.startTask(toRender: graph, to: destination)
+        let offset = CGPoint(x: 0, y: graph.extent.height - view.drawableSize.height)
+        try! context.startTask(
+            toRender: graph,
+            from: CGRect(origin: offset, size: view.drawableSize),
+            to: destination,
+            at: .zero
+        )
         
         cb.present(drawable)
         cb.commit()
@@ -67,14 +72,27 @@ class CoreImagePipelineRenderer : NSObject, MTLRenderer {
         }
         
         output = encodeBlend(of: output, and: CIImage(mtlTexture: helper.layers.last!)!)
-        return output
+        return output.oriented(.downMirrored)
     }
     
     func encodeBlend(of tex1: CIImage, and tex2: CIImage) -> CIImage {
-        let add = CIFilter.additionCompositing()
-        add.backgroundImage = tex1
-        add.inputImage = tex2
-        return add.outputImage!
+        CustomBlendFilter(foregroundImage: tex2, backgroundImage: tex1)
+            .outputImage!
+    }
+}
+
+struct CustomBlendFilter {
+    var foregroundImage: CIImage
+    var backgroundImage: CIImage
+    
+    private static let kernel: CIBlendKernel = { () -> CIBlendKernel in
+        let url = Bundle.main.url(forResource: "Shaders", withExtension: "ci.metallib")!
+        let data = try! Data(contentsOf: url)
+        return try! CIBlendKernel(functionName: "coreImageBlend", fromMetalLibraryData: data)
+    }()
+    
+    var outputImage : CIImage? {
+        Self.kernel.apply(foreground: foregroundImage, background: backgroundImage)
     }
 }
 
