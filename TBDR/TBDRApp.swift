@@ -17,6 +17,7 @@ struct TBDRApp: App {
     
     enum Renderer: String, Hashable, Identifiable, CaseIterable {
         case renderPipeline = "Render Pipeline"
+        case renderPipelineFusedEncoder = "Render Pipeline + Single Encoder"
         case renderPipelineWithTiles = "Render Pipeline + Tile Memory"
         case computePipeline = "Compute Pipeline"
         case coreImagePipeline = "Core Image Pipeline"
@@ -40,6 +41,8 @@ struct TBDRApp: App {
                 switch displayedRenderer {
                 case .renderPipeline:
                     MetalView<RenderPipelineRenderer>()
+                case .renderPipelineFusedEncoder:
+                    MetalView<RenderPipelineFusedEncoderRenderer>()
                 case .renderPipelineWithTiles:
                     MetalView<RenderPipelineWithTileMemoryRenderer>()
                 case .computePipeline:
