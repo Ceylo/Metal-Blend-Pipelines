@@ -20,6 +20,7 @@
 		87AC36FA2BFB6681007A65E6 /* MetalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87AC36F92BFB6681007A65E6 /* MetalView.swift */; };
 		87AC36FC2BFB7773007A65E6 /* MetalHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87AC36FB2BFB7773007A65E6 /* MetalHelper.swift */; };
 		87B8BDEC2C0392D600A84398 /* Shaders.ci.metal in Sources */ = {isa = PBXBuildFile; fileRef = 87B8BDEB2C0392D600A84398 /* Shaders.ci.metal */; };
+		87B92CBA2C0A08BD00DB0997 /* ComputeTiledPipelineRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87B92CB92C0A08BD00DB0997 /* ComputeTiledPipelineRenderer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -70,6 +71,7 @@
 		87AC36F92BFB6681007A65E6 /* MetalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalView.swift; sourceTree = "<group>"; };
 		87AC36FB2BFB7773007A65E6 /* MetalHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalHelper.swift; sourceTree = "<group>"; };
 		87B8BDEB2C0392D600A84398 /* Shaders.ci.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Shaders.ci.metal; sourceTree = "<group>"; };
+		87B92CB92C0A08BD00DB0997 /* ComputeTiledPipelineRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComputeTiledPipelineRenderer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -110,6 +112,7 @@
 				879B8AF02BFE3CAA00D06497 /* RenderPipelineFusedEncoderRenderer.swift */,
 				8758DC802C09E1F100F53F21 /* RenderPipelineWithTileMemoryRenderer.swift */,
 				87AC36F52BF7B5D9007A65E6 /* ComputePipelineRenderer.swift */,
+				87B92CB92C0A08BD00DB0997 /* ComputeTiledPipelineRenderer.swift */,
 				8749742D2C00EC0100EFD546 /* CoreImagePipelineRenderer.swift */,
 				8724F5E62BF4C7CD00890EAF /* Shaders.metal */,
 				87B8BDEB2C0392D600A84398 /* Shaders.ci.metal */,
@@ -216,6 +219,7 @@
 				8724F5E72BF4C7CD00890EAF /* Shaders.metal in Sources */,
 				879B8AF12BFE3CAA00D06497 /* RenderPipelineFusedEncoderRenderer.swift in Sources */,
 				8758DC812C09E1F100F53F21 /* RenderPipelineWithTileMemoryRenderer.swift in Sources */,
+				87B92CBA2C0A08BD00DB0997 /* ComputeTiledPipelineRenderer.swift in Sources */,
 				87AC36F62BF7B5D9007A65E6 /* ComputePipelineRenderer.swift in Sources */,
 				8724F5D62BF4C04700890EAF /* TBDRApp.swift in Sources */,
 			);

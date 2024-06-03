@@ -45,6 +45,20 @@ kernel void kernelFunc(texture2d<half, access::sample> tex1 [[texture(0)]],
     output.write(out, gid);
 }
 
+kernel void kernelFuncTiled(texture2d<half, access::sample> tex1 [[texture(0)]],
+                            texture2d<half, access::sample> tex2 [[texture(1)]],
+                            texture2d<half, access::write> output [[texture(2)]],
+                            constant const TiledComputeBlendParams& params [[buffer(0)]],
+                            ushort2 gid [[thread_position_in_grid]])
+{
+    constexpr sampler s(coord::pixel, address::clamp_to_zero, filter::linear);
+    const auto texCoord = float2(gid) + 0.5;
+    const auto p1 = tex1.sample(s, texCoord + float2(params.Src1StartPosition()));
+    const auto p2 = tex2.sample(s, texCoord + float2(params.Src2StartPosition()));
+    const auto out = (p1 + p2) / attenuation;
+    output.write(out, gid + params.DstStartPosition());
+}
+
 struct FragmentIO {
     const half4 framebuffer  [[ color(0) ]];
     const half4 tile1        [[ color(1) ]];

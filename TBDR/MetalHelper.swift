@@ -65,17 +65,26 @@ extension MTLCommandBuffer {
 
 extension MTLComputeCommandEncoder {
     func dispatchThreadsForWorking(on texture: MTLTexture, with state: MTLComputePipelineState) {
+        dispatchThreadsForWorking(on: texture.size, with: state)
+    }
+    
+    func dispatchThreadsForWorking(on gridSize: MTLSize, with state: MTLComputePipelineState) {
         let w = state.threadExecutionWidth
         let h = state.maxTotalThreadsPerThreadgroup / w
         let threadsPerThreadgroup = MTLSizeMake(w, h, 1)
-        let threadsPerGrid = MTLSize(width: texture.width, height: texture.height, depth: 1)
-        dispatchThreads(threadsPerGrid, threadsPerThreadgroup: threadsPerThreadgroup)
+        dispatchThreads(gridSize, threadsPerThreadgroup: threadsPerThreadgroup)
     }
 }
 
 extension MTLTexture {
     var size: MTLSize {
         MTLSize(width: width, height: height, depth: depth)
+    }
+}
+
+extension MTLSize {
+    static func /(size: MTLSize, denominator: Int) -> MTLSize {
+        .init(width: size.width / denominator, height: size.height / denominator, depth: size.depth)
     }
 }
 

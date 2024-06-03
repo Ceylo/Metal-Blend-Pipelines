@@ -1,5 +1,5 @@
 //
-//  RenderPipelineRenderer.swift
+//  RenderPipelineWithTileMemoryRenderer.swift
 //  TBDR
 //
 //  Created by Ceylo on 15/05/2024.
