@@ -59,6 +59,22 @@ kernel void kernelFuncTiled(texture2d<half, access::sample> tex1 [[texture(0)]],
     output.write(out, gid + params.DstStartPosition());
 }
 
+
+kernel void aggregatedKernelFunc(texture2d<half, access::write> output [[texture(0)]],
+                                 array<texture2d<half, access::sample>, 50> inputs [[texture(1)]],
+                                 ushort2 gid [[thread_position_in_grid]])
+{
+    constexpr sampler s(coord::pixel, address::clamp_to_zero, filter::linear);
+    const auto texCoord = float2(gid) + 0.5;
+    half4 out = 0;
+    for (ushort i = 0; i < inputs.size(); ++i)
+    {
+        const half4 newSample = inputs[i].sample(s, texCoord);
+        out = (out + newSample) / attenuation;
+    }
+    output.write(out, gid);
+}
+
 struct FragmentIO {
     const half4 framebuffer  [[ color(0) ]];
     const half4 tile1        [[ color(1) ]];

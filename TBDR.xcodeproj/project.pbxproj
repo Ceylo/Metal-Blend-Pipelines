@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		871476F72C0E123C00FFB317 /* ComputeAggregatedPipelineRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 871476F62C0E123C00FFB317 /* ComputeAggregatedPipelineRenderer.swift */; };
 		8724F5D62BF4C04700890EAF /* TBDRApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8724F5D52BF4C04700890EAF /* TBDRApp.swift */; };
 		8724F5DA2BF4C04800890EAF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8724F5D92BF4C04800890EAF /* Assets.xcassets */; };
 		8724F5DD2BF4C04800890EAF /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8724F5DC2BF4C04800890EAF /* Preview Assets.xcassets */; };
@@ -55,6 +56,7 @@
 /* End PBXBuildRule section */
 
 /* Begin PBXFileReference section */
+		871476F62C0E123C00FFB317 /* ComputeAggregatedPipelineRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComputeAggregatedPipelineRenderer.swift; sourceTree = "<group>"; };
 		8724F5D22BF4C04700890EAF /* TBDR.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TBDR.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8724F5D52BF4C04700890EAF /* TBDRApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TBDRApp.swift; sourceTree = "<group>"; };
 		8724F5D92BF4C04800890EAF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -113,6 +115,7 @@
 				8758DC802C09E1F100F53F21 /* RenderPipelineWithTileMemoryRenderer.swift */,
 				87AC36F52BF7B5D9007A65E6 /* ComputePipelineRenderer.swift */,
 				87B92CB92C0A08BD00DB0997 /* ComputeTiledPipelineRenderer.swift */,
+				871476F62C0E123C00FFB317 /* ComputeAggregatedPipelineRenderer.swift */,
 				8749742D2C00EC0100EFD546 /* CoreImagePipelineRenderer.swift */,
 				8724F5E62BF4C7CD00890EAF /* Shaders.metal */,
 				87B8BDEB2C0392D600A84398 /* Shaders.ci.metal */,
@@ -213,6 +216,7 @@
 			files = (
 				8724F5E52BF4C06400890EAF /* RenderPipelineRenderer.swift in Sources */,
 				87B8BDEC2C0392D600A84398 /* Shaders.ci.metal in Sources */,
+				871476F72C0E123C00FFB317 /* ComputeAggregatedPipelineRenderer.swift in Sources */,
 				87AC36FA2BFB6681007A65E6 /* MetalView.swift in Sources */,
 				8749742E2C00EC0100EFD546 /* CoreImagePipelineRenderer.swift in Sources */,
 				87AC36FC2BFB7773007A65E6 /* MetalHelper.swift in Sources */,

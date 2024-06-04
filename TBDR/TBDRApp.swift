@@ -6,6 +6,9 @@
 //
 
 import SwiftUI
+import os
+
+let signposter = OSSignposter(subsystem: "TBDR", category: "Renderer")
 
 @main
 struct TBDRApp: App {
@@ -21,11 +24,13 @@ struct TBDRApp: App {
         case renderPipelineWithTiles = "Render Pipeline + Tile Memory"
         case computePipeline = "Compute Pipeline"
         case computeTiledPipeline = "Tiled Compute Pipeline"
+        case computedAggregatedPipeline = "Aggregated Compute Pipeline"
         case coreImagePipeline = "Core Image Pipeline"
         
         var id: Self { self }
     }
     
+    @State private var token: OSSignpostIntervalState = signposter.beginInterval("Renderer", "\(Renderer.renderPipeline.rawValue)")
     @State private var displayedRenderer: Renderer = .renderPipeline
     
     var body: some Scene {
@@ -50,9 +55,15 @@ struct TBDRApp: App {
                     MetalView<ComputePipelineRenderer>()
                 case .computeTiledPipeline:
                     MetalView<ComputeTiledPipelineRenderer>()
+                case .computedAggregatedPipeline:
+                    MetalView<ComputeAggregatedPipelineRenderer>()
                 case .coreImagePipeline:
                     MetalView<CoreImagePipelineRenderer>()
                 }
+            }
+            .onChange(of: displayedRenderer) { oldValue, newValue in
+                signposter.endInterval("Renderer", token, "\(oldValue.rawValue)")
+                token = signposter.beginInterval("Renderer", "\(newValue.rawValue)")
             }
         }
     }
