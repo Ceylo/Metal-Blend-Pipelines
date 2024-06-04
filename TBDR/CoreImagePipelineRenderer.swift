@@ -7,21 +7,25 @@
 
 import SwiftUI
 import MetalKit
+#if os(macOS)
 import OpenGL.GL.Macro // Required to make Swift/C++ interop happy o_o
+#endif
 import CoreImage
 import CoreImage.CIFilterBuiltins
 
-class CoreImagePipelineRenderer : NSObject, MTLRenderer {
+final class CoreImagePipelineRenderer : NSObject, MTLRenderer {
     let drawablePixelFormat: MTLPixelFormat = .bgra8Unorm_srgb
     let drawableIsWritable: Bool = true
     let drawableColorSpace: CGColorSpace = .init(name: CGColorSpace.sRGB)!
     
     let helper: MetalHelper
     let commandQueue: MTLCommandQueue
+    var executionMode: MTLCommandScheduler.Mode = .unconstrained // unused
+    // Not using MTLCommandScheduler for this renderer, Core Image already enforces serial GPU work
     // Make several pipelines states to simulate different blend functions
     let context: CIContext
     
-    override required init() {
+    override init() {
         let helper = MetalHelper.shared
         let device = helper.device
         self.helper = helper
@@ -97,5 +101,5 @@ struct CustomBlendFilter {
 }
 
 #Preview {
-    MetalView<CoreImagePipelineRenderer>()
+    MetalView<CoreImagePipelineRenderer>(serialGPUWork: true)
 }

@@ -8,20 +8,25 @@
 import SwiftUI
 import MetalKit
 
-class ComputeAggregatedPipelineRenderer : NSObject, MTLRenderer {
+final class ComputeAggregatedPipelineRenderer : NSObject, MTLRenderer {
     let drawablePixelFormat: MTLPixelFormat = .bgra8Unorm_srgb
     let drawableIsWritable: Bool = true
     let drawableColorSpace: CGColorSpace = .init(name: CGColorSpace.sRGB)!
     
     let helper: MetalHelper
     let commandQueue: MTLCommandQueue
+    var scheduler: MTLCommandScheduler
+    var executionMode: MTLCommandScheduler.Mode = .unconstrained {
+        didSet { scheduler = .init(device: helper.device, mode: executionMode) }
+    }
     let pipelineState: MTLComputePipelineState
     
-    override required init() {
+    override init() {
         let helper = MetalHelper.shared
         let device = helper.device
         self.helper = helper
         self.commandQueue = device.makeCommandQueue()!
+        self.scheduler = .init(device: device, mode: executionMode)
         
         let library = device.makeDefaultLibrary()!
         let kernelFunc = library.makeFunction(name: "aggregatedKernelFunc")!
@@ -44,8 +49,10 @@ class ComputeAggregatedPipelineRenderer : NSObject, MTLRenderer {
             return
         }
         
-        cb.encodeCompute("Final render") { encoder in
-            encodeBlend(of: helper.layers, into: drawable.texture, using: encoder)
+        scheduler.withManagedCommandsScheduling(for: cb) {
+            cb.encodeCompute("Final render") { encoder in
+                encodeBlend(of: helper.layers, into: drawable.texture, using: encoder)
+            }
         }
         
         cb.present(drawable)
@@ -66,5 +73,5 @@ class ComputeAggregatedPipelineRenderer : NSObject, MTLRenderer {
 }
 
 #Preview {
-    MetalView<ComputeAggregatedPipelineRenderer>()
+    MetalView<ComputeAggregatedPipelineRenderer>(serialGPUWork: true)
 }

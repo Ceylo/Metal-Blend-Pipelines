@@ -8,7 +8,7 @@
 import SwiftUI
 import MetalKit
 
-class RenderPipelineFusedEncoderRenderer : NSObject, MTLRenderer {
+final class RenderPipelineFusedEncoderRenderer : NSObject, MTLRenderer {
     let drawablePixelFormat: MTLPixelFormat = .bgra8Unorm_srgb
     let drawableIsWritable: Bool = false
     let drawableColorSpace: CGColorSpace = .init(name: CGColorSpace.sRGB)!
@@ -16,6 +16,10 @@ class RenderPipelineFusedEncoderRenderer : NSObject, MTLRenderer {
     let helper: MetalHelper
     var intermediateImages: [MTLTexture]
     let commandQueue: MTLCommandQueue
+    var scheduler: MTLCommandScheduler
+    var executionMode: MTLCommandScheduler.Mode = .unconstrained {
+        didSet { scheduler = .init(device: helper.device, mode: executionMode) }
+    }
     // Make several pipelines states to simulate different blend functions
     let initPipelineStates16f: [MTLRenderPipelineState]
     let pipelineStates16f: [MTLRenderPipelineState]
@@ -23,11 +27,12 @@ class RenderPipelineFusedEncoderRenderer : NSObject, MTLRenderer {
     let vertices: MTLBuffer
     let workingSize = MTLSize(width: 4000, height: 2000, depth: 1)
     
-    required override init() {
+    override init() {
         let helper = MetalHelper.shared
         let device = helper.device
         self.helper = helper
         self.commandQueue = device.makeCommandQueue()!
+        self.scheduler = .init(device: device, mode: executionMode)
         
         let textureDesc = MTLTextureDescriptor.texture2DDescriptor(
             pixelFormat: .rgba16Float,
@@ -91,7 +96,7 @@ class RenderPipelineFusedEncoderRenderer : NSObject, MTLRenderer {
     
     func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {}
     
-    var drawCalls = 0
+    private var drawCalls = 0
     func draw(in view: MTKView) {
         let cb = commandQueue.makeCommandBuffer()!
         guard let renderPass = view.currentRenderPassDescriptor else { return }
@@ -106,11 +111,13 @@ class RenderPipelineFusedEncoderRenderer : NSObject, MTLRenderer {
         
         drawCalls = 0
         
-        cb.encodeRender("Render", descriptor: renderPass) { encoder in
-            let size = renderPass.colorAttachments[0].texture!.size
-            encodeInitBlend(of: helper.layers[0], and: helper.layers[1], using: encoder, drawableSize: size)
-            for (index, layer) in helper.layers.dropFirst(2).enumerated() {
-                encodeBlend(of: layer, using: encoder, drawableSize: size, passIndex: index, final: index == helper.layers.count - 3)
+        scheduler.withManagedCommandsScheduling(for: cb) {
+            cb.encodeRender("Render", descriptor: renderPass) { encoder in
+                let size = renderPass.colorAttachments[0].texture!.size
+                encodeInitBlend(of: helper.layers[0], and: helper.layers[1], using: encoder, drawableSize: size)
+                for (index, layer) in helper.layers.dropFirst(2).enumerated() {
+                    encodeBlend(of: layer, using: encoder, drawableSize: size, passIndex: index, final: index == helper.layers.count - 3)
+                }
             }
         }
         
@@ -166,5 +173,5 @@ class RenderPipelineFusedEncoderRenderer : NSObject, MTLRenderer {
 }
 
 #Preview {
-    MetalView<RenderPipelineFusedEncoderRenderer>()
+    MetalView<RenderPipelineFusedEncoderRenderer>(serialGPUWork: true)
 }

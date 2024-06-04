@@ -32,38 +32,51 @@ struct TBDRApp: App {
     
     @State private var token: OSSignpostIntervalState = signposter.beginInterval("Renderer", "\(Renderer.renderPipeline.rawValue)")
     @State private var displayedRenderer: Renderer = .renderPipeline
+    @State private var serialGPUWork: Bool = true
     
     var body: some Scene {
         WindowGroup {
             VStack(spacing: 0) {
-                Picker("", selection: $displayedRenderer) {
-                    ForEach(Renderer.allCases) {
-                        Text($0.rawValue).tag($0)
+                HStack {
+                    Toggle(isOn: $serialGPUWork) {
+                        Text("Serial GPU work")
                     }
+                    .disabled(displayedRenderer == .coreImagePipeline)
+                    .padding(.leading)
+                    
+                    Picker("", selection: $displayedRenderer) {
+                        ForEach(Renderer.allCases) {
+                            Text($0.rawValue).tag($0)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+                    .padding(pickerPadding)
                 }
-                .pickerStyle(.segmented)
-                .padding(pickerPadding)
                 
                 switch displayedRenderer {
                 case .renderPipeline:
-                    MetalView<RenderPipelineRenderer>()
+                    MetalView<RenderPipelineRenderer>(serialGPUWork: serialGPUWork)
                 case .renderPipelineFusedEncoder:
-                    MetalView<RenderPipelineFusedEncoderRenderer>()
+                    MetalView<RenderPipelineFusedEncoderRenderer>(serialGPUWork: serialGPUWork)
                 case .renderPipelineWithTiles:
-                    MetalView<RenderPipelineWithTileMemoryRenderer>()
+                    MetalView<RenderPipelineWithTileMemoryRenderer>(serialGPUWork: serialGPUWork)
                 case .computePipeline:
-                    MetalView<ComputePipelineRenderer>()
+                    MetalView<ComputePipelineRenderer>(serialGPUWork: serialGPUWork)
                 case .computeTiledPipeline:
-                    MetalView<ComputeTiledPipelineRenderer>()
+                    MetalView<ComputeTiledPipelineRenderer>(serialGPUWork: serialGPUWork)
                 case .computedAggregatedPipeline:
-                    MetalView<ComputeAggregatedPipelineRenderer>()
+                    MetalView<ComputeAggregatedPipelineRenderer>(serialGPUWork: serialGPUWork)
                 case .coreImagePipeline:
-                    MetalView<CoreImagePipelineRenderer>()
+                    MetalView<CoreImagePipelineRenderer>(serialGPUWork: true)
                 }
             }
             .onChange(of: displayedRenderer) { oldValue, newValue in
                 signposter.endInterval("Renderer", token, "\(oldValue.rawValue)")
                 token = signposter.beginInterval("Renderer", "\(newValue.rawValue)")
+                
+                if newValue == .coreImagePipeline {
+                    serialGPUWork = true
+                }
             }
         }
     }

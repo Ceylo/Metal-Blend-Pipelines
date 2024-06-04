@@ -8,7 +8,7 @@
 import SwiftUI
 import MetalKit
 
-class ComputeTiledPipelineRenderer : NSObject, MTLRenderer {
+final class ComputeTiledPipelineRenderer : NSObject, MTLRenderer {
     let drawablePixelFormat: MTLPixelFormat = .bgra8Unorm_srgb
     let drawableIsWritable: Bool = true
     let drawableColorSpace: CGColorSpace = .init(name: CGColorSpace.sRGB)!
@@ -16,17 +16,22 @@ class ComputeTiledPipelineRenderer : NSObject, MTLRenderer {
     let helper: MetalHelper
     var intermediateImages: [MTLTexture]
     let commandQueue: MTLCommandQueue
+    var scheduler: MTLCommandScheduler
+    var executionMode: MTLCommandScheduler.Mode = .unconstrained {
+        didSet { scheduler = .init(device: helper.device, mode: executionMode) }
+    }
     // Make several pipelines states to simulate different blend functions
     let pipelineStates: [MTLComputePipelineState]
     static let workingSize = MTLSize(width: 4000, height: 2000, depth: 1)
     static let tileCount = 4
     static var tileSize: MTLSize { .init(width: workingSize.width / 2, height: workingSize.height / 2, depth: workingSize.depth)}
     
-    override required init() {
+    override init() {
         let helper = MetalHelper.shared
         let device = helper.device
         self.helper = helper
         self.commandQueue = device.makeCommandQueue()!
+        self.scheduler = .init(device: device, mode: executionMode)
         
         let textureDesc = MTLTextureDescriptor.texture2DDescriptor(
             pixelFormat: .rgba16Float,
@@ -62,46 +67,51 @@ class ComputeTiledPipelineRenderer : NSObject, MTLRenderer {
         dispatchCalls = 0
         var input1 = Array(repeating: helper.layers[0], count: Self.tileCount)
         
-        cb.encodeCompute("Merge render") { encoder in
-            for layer in helper.layers.dropFirst().dropLast() {
-                // A bit hacky… src1 is a full image on the first pass only, and is then a tile,
-                // because we skipped making tiles for all input textures, and tile output is the input in next pass.
-                let src1NeedsTileIndex = input1[0].size.width > Self.tileSize.width
+        let drawable: CAMetalDrawable? = scheduler.withManagedCommandsScheduling(for: cb) {
+            cb.encodeCompute("Merge render") { encoder in
+                for layer in helper.layers.dropFirst().dropLast() {
+                    // A bit hacky… src1 is a full image on the first pass only, and is then a tile,
+                    // because we skipped making tiles for all input textures, and tile output is the input in next pass.
+                    let src1NeedsTileIndex = input1[0].size.width > Self.tileSize.width
+                    for tile in 0..<Self.tileCount {
+                        encodeBlend(
+                            of: input1[tile],
+                            and: layer,
+                            into: intermediateImages[tile],
+                            using: encoder,
+                            src1TileIndex: src1NeedsTileIndex ? tile : 0,
+                            src2TileIndex: tile,
+                            dstTileIndex: 0
+                        )
+                    }
+                    input1 = intermediateImages
+                }
+            }
+            
+            guard let drawable = view.currentDrawable else {
+                return nil
+            }
+            
+            cb.encodeCompute("Final render") { encoder in
                 for tile in 0..<Self.tileCount {
                     encodeBlend(
                         of: input1[tile],
-                        and: layer,
-                        into: intermediateImages[tile],
+                        and: helper.layers.last!,
+                        into: drawable.texture,
                         using: encoder,
-                        src1TileIndex: src1NeedsTileIndex ? tile : 0,
+                        src1TileIndex: 0,
                         src2TileIndex: tile,
-                        dstTileIndex: 0
+                        dstTileIndex: tile,
+                        gridSize: Self.tileSize
                     )
                 }
-                input1 = intermediateImages
             }
+            return drawable
         }
         
-        guard let drawable = view.currentDrawable else {
-            return
+        if let drawable {
+            cb.present(drawable)
         }
-        
-        cb.encodeCompute("Final render") { encoder in
-            for tile in 0..<Self.tileCount {
-                encodeBlend(
-                    of: input1[tile],
-                    and: helper.layers.last!,
-                    into: drawable.texture,
-                    using: encoder,
-                    src1TileIndex: 0,
-                    src2TileIndex: tile,
-                    dstTileIndex: tile,
-                    gridSize: Self.tileSize
-                )
-            }
-        }
-        
-        cb.present(drawable)
         cb.commit()
     }
     
@@ -136,5 +146,5 @@ class ComputeTiledPipelineRenderer : NSObject, MTLRenderer {
 }
 
 #Preview {
-    MetalView<ComputeTiledPipelineRenderer>()
+    MetalView<ComputeTiledPipelineRenderer>(serialGPUWork: true)
 }

@@ -13,33 +13,34 @@ protocol MTLRenderer: MTKViewDelegate {
     var drawablePixelFormat: MTLPixelFormat { get }
     var drawableIsWritable: Bool { get }
     var drawableColorSpace: CGColorSpace { get }
+    var executionMode: MTLCommandScheduler.Mode { get set }
 }
 
 #if os(macOS)
 typealias ViewRepresentable = NSViewRepresentable
-typealias ViewRepresentableContext = NSViewRepresentableContext
 #elseif os(iOS)
 typealias ViewRepresentable = UIViewRepresentable
-typealias ViewRepresentableContext = UIViewRepresentableContext
 #endif
 
 
 struct MetalView<Renderer: MTLRenderer>: ViewRepresentable {
+    let serialGPUWork: Bool
+    
     func makeCoordinator() -> Renderer {
         Renderer()
     }
     
 #if os(iOS)
-    func makeUIView(context: ViewRepresentableContext<Self>) -> MTKView {
+    func makeUIView(context: Context) -> MTKView {
         makeView(context: context)
     }
 #elseif os(macOS)
-    func makeNSView(context: ViewRepresentableContext<Self>) -> MTKView {
+    func makeNSView(context: Context) -> MTKView {
         makeView(context: context)
     }
 #endif
     
-    private func makeView(context: ViewRepresentableContext<Self>) -> MTKView {
+    private func makeView(context: Context) -> MTKView {
         let mtkView = MTKView()
         mtkView.delegate = context.coordinator
         mtkView.device = MTLCreateSystemDefaultDevice()!
@@ -59,6 +60,8 @@ struct MetalView<Renderer: MTLRenderer>: ViewRepresentable {
 #if os(iOS)
     func updateUIView(_ uiView: MTKView, context: Context) {}
 #elseif os(macOS)
-    func updateNSView(_ nsView: MTKView, context: ViewRepresentableContext<Self>) {}
+    func updateNSView(_ nsView: MTKView, context: Context) {
+        context.coordinator.executionMode = serialGPUWork ? .serial : .unconstrained
+    }
 #endif
 }

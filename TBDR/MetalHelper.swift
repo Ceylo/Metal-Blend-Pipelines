@@ -88,6 +88,40 @@ extension MTLSize {
     }
 }
 
+class MTLCommandScheduler {
+    private var lastEncodedSignalValue: UInt64?
+    private let event: MTLEvent
+    private let mode: Mode
+    
+    enum Mode {
+        /// A scheduling mode where MTLCommandBuffers are always executed one after another.
+        case serial
+        /// A scheduling mode where GPU drivers are free to execute GPU work serially or concurrently.
+        case unconstrained
+    }
+    
+    init(device: MTLDevice, mode: Mode) {
+        self.event = device.makeEvent()!
+        self.mode = mode
+    }
+    
+    func withManagedCommandsScheduling<T>(for commandBuffer: MTLCommandBuffer, _ gpuEncoding: () -> T) -> T {
+        guard mode == .serial else {
+            return gpuEncoding()
+        }
+        
+        if let lastEncodedSignalValue {
+            commandBuffer.encodeWaitForEvent(event, value: lastEncodedSignalValue)
+        }
+        let result = gpuEncoding()
+        
+        let newEventValue = (lastEncodedSignalValue ?? 0) + 1
+        commandBuffer.encodeSignalEvent(event, value: newEventValue)
+        lastEncodedSignalValue = newEventValue
+        return result
+    }
+}
+
 import SwiftImage
 
 func generateLayers() {

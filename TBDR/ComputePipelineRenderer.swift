@@ -8,7 +8,7 @@
 import SwiftUI
 import MetalKit
 
-class ComputePipelineRenderer : NSObject, MTLRenderer {
+final class ComputePipelineRenderer : NSObject, MTLRenderer {
     let drawablePixelFormat: MTLPixelFormat = .bgra8Unorm_srgb
     let drawableIsWritable: Bool = true
     let drawableColorSpace: CGColorSpace = .init(name: CGColorSpace.sRGB)!
@@ -16,14 +16,19 @@ class ComputePipelineRenderer : NSObject, MTLRenderer {
     let helper: MetalHelper
     var intermediateImage: MTLTexture
     let commandQueue: MTLCommandQueue
+    var scheduler: MTLCommandScheduler
+    var executionMode: MTLCommandScheduler.Mode = .unconstrained {
+        didSet { scheduler = .init(device: helper.device, mode: executionMode) }
+    }
     // Make several pipelines states to simulate different blend functions
     let pipelineStates: [MTLComputePipelineState]
     
-    override required init() {
+    override init() {
         let helper = MetalHelper.shared
         let device = helper.device
         self.helper = helper
         self.commandQueue = device.makeCommandQueue()!
+        self.scheduler = .init(device: device, mode: executionMode)
         
         let textureDesc = MTLTextureDescriptor.texture2DDescriptor(
             pixelFormat: .rgba16Float,
@@ -56,22 +61,27 @@ class ComputePipelineRenderer : NSObject, MTLRenderer {
         dispatchCalls = 0
         var input1 = helper.layers[0]
         
-        cb.encodeCompute("Merge render") { encoder in
-            for layer in helper.layers.dropFirst().dropLast() {
-                encodeBlend(of: input1, and: layer, into: intermediateImage, using: encoder)
-                input1 = intermediateImage
+        let drawable: CAMetalDrawable? = scheduler.withManagedCommandsScheduling(for: cb) {
+            cb.encodeCompute("Merge render") { encoder in
+                for layer in helper.layers.dropFirst().dropLast() {
+                    encodeBlend(of: input1, and: layer, into: intermediateImage, using: encoder)
+                    input1 = intermediateImage
+                }
             }
+            
+            guard let drawable = view.currentDrawable else {
+                return nil
+            }
+            
+            cb.encodeCompute("Final render") { encoder in
+                encodeBlend(of: input1, and: helper.layers.last!, into: drawable.texture, using: encoder)
+            }
+            return drawable
         }
         
-        guard let drawable = view.currentDrawable else {
-            return
+        if let drawable {
+            cb.present(drawable)
         }
-        
-        cb.encodeCompute("Final render") { encoder in
-            encodeBlend(of: input1, and: helper.layers.last!, into: drawable.texture, using: encoder)
-        }
-        
-        cb.present(drawable)
         cb.commit()
     }
     
@@ -92,5 +102,5 @@ class ComputePipelineRenderer : NSObject, MTLRenderer {
 }
 
 #Preview {
-    MetalView<ComputePipelineRenderer>()
+    MetalView<ComputePipelineRenderer>(serialGPUWork: true)
 }
