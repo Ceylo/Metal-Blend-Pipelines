@@ -39,9 +39,6 @@ class ComputeAggregatedPipelineRenderer : NSObject, MTLRenderer {
     func draw(in view: MTKView) {
         let cb = commandQueue.makeCommandBuffer()!
         dispatchCalls = 0
-        defer {
-            print("Encoded \(dispatchCalls) dispatch calls")
-        }
         
         guard let drawable = view.currentDrawable else {
             return

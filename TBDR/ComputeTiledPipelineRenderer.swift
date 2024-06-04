@@ -60,9 +60,6 @@ class ComputeTiledPipelineRenderer : NSObject, MTLRenderer {
     func draw(in view: MTKView) {
         let cb = commandQueue.makeCommandBuffer()!
         dispatchCalls = 0
-        defer {
-            print("Encoded \(dispatchCalls) dispatch calls")
-        }
         var input1 = Array(repeating: helper.layers[0], count: Self.tileCount)
         
         cb.encodeCompute("Merge render") { encoder in
@@ -139,5 +136,5 @@ class ComputeTiledPipelineRenderer : NSObject, MTLRenderer {
 }
 
 #Preview {
-    MetalView<ComputePipelineRenderer>()
+    MetalView<ComputeTiledPipelineRenderer>()
 }

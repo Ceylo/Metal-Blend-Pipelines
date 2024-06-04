@@ -84,9 +84,6 @@ class RenderPipelineRenderer : NSObject, MTLRenderer {
         renderPass.colorAttachments[0].loadAction = .clear
         
         drawCalls = 0
-        defer {
-            print("Encoded \(drawCalls) draw calls")
-        }
         var input1 = helper.layers[0]
         let intermediateImageSize = intermediateImages[0].size
         

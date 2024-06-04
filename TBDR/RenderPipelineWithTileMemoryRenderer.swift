@@ -108,9 +108,6 @@ class RenderPipelineWithTileMemoryRenderer : NSObject, MTLRenderer {
         renderPass.colorAttachments[2].storeAction = .dontCare
         
         drawCalls = 0
-        defer {
-            print("Encoded \(drawCalls) draw calls")
-        }
         
         cb.encodeRender("Render", descriptor: renderPass) { encoder in
             let size = renderPass.colorAttachments[0].texture!.size

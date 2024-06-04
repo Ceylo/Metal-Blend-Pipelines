@@ -54,9 +54,6 @@ class ComputePipelineRenderer : NSObject, MTLRenderer {
     func draw(in view: MTKView) {
         let cb = commandQueue.makeCommandBuffer()!
         dispatchCalls = 0
-        defer {
-            print("Encoded \(dispatchCalls) dispatch calls")
-        }
         var input1 = helper.layers[0]
         
         cb.encodeCompute("Merge render") { encoder in
