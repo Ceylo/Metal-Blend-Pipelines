@@ -26,6 +26,14 @@ typealias ViewRepresentable = UIViewRepresentable
 struct MetalView<Renderer: MTLRenderer>: ViewRepresentable {
     let serialGPUWork: Bool
     
+    private var preferredFramesPerSecond: Int {
+        if ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1" {
+            return 1
+        } else {
+            return 240
+        }
+    }
+    
     func makeCoordinator() -> Renderer {
         Renderer()
     }
@@ -47,7 +55,7 @@ struct MetalView<Renderer: MTLRenderer>: ViewRepresentable {
         mtkView.clearColor = MTLClearColor(red: 0, green: 0, blue: 0, alpha: 0)
         mtkView.colorPixelFormat = context.coordinator.drawablePixelFormat
         mtkView.framebufferOnly = !context.coordinator.drawableIsWritable
-        mtkView.preferredFramesPerSecond = 240
+        mtkView.preferredFramesPerSecond = preferredFramesPerSecond
         let layer = mtkView.layer as! CAMetalLayer
         layer.maximumDrawableCount = 2
 #if os(macOS)
@@ -58,10 +66,12 @@ struct MetalView<Renderer: MTLRenderer>: ViewRepresentable {
     }
     
 #if os(iOS)
-    func updateUIView(_ uiView: MTKView, context: Context) {}
+    func updateUIView(_ uiView: MTKView, context: Context) { updateView(uiView, context: context) }
 #elseif os(macOS)
-    func updateNSView(_ nsView: MTKView, context: Context) {
+    func updateNSView(_ nsView: MTKView, context: Context) { updateView(nsView, context: context) }
+#endif
+    
+    private func updateView(_ view: MTKView, context: Context) {
         context.coordinator.executionMode = serialGPUWork ? .serial : .unconstrained
     }
-#endif
 }
