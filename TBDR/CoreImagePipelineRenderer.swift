@@ -99,7 +99,3 @@ struct CustomBlendFilter {
         Self.kernel.apply(foreground: foregroundImage, background: backgroundImage)
     }
 }
-
-#Preview {
-    MetalView<CoreImagePipelineRenderer>(serialGPUWork: true)
-}

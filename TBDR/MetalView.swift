@@ -24,7 +24,8 @@ typealias ViewRepresentable = UIViewRepresentable
 
 
 struct MetalView<Renderer: MTLRenderer>: ViewRepresentable {
-    let serialGPUWork: Bool
+    let sequentialCommandBuffers: Bool
+    let maximumDrawableCount: Int
     
     private var preferredFramesPerSecond: Int {
         if ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1" {
@@ -57,7 +58,6 @@ struct MetalView<Renderer: MTLRenderer>: ViewRepresentable {
         mtkView.framebufferOnly = !context.coordinator.drawableIsWritable
         mtkView.preferredFramesPerSecond = preferredFramesPerSecond
         let layer = mtkView.layer as! CAMetalLayer
-        layer.maximumDrawableCount = 2
 #if os(macOS)
         layer.displaySyncEnabled = false
         mtkView.colorspace = context.coordinator.drawableColorSpace
@@ -72,6 +72,8 @@ struct MetalView<Renderer: MTLRenderer>: ViewRepresentable {
 #endif
     
     private func updateView(_ view: MTKView, context: Context) {
-        context.coordinator.executionMode = serialGPUWork ? .serial : .unconstrained
+        context.coordinator.executionMode = sequentialCommandBuffers ? .serial : .unconstrained
+        let layer = view.layer as! CAMetalLayer
+        layer.maximumDrawableCount = maximumDrawableCount
     }
 }

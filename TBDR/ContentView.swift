@@ -23,7 +23,7 @@ struct ContentView: View {
         case renderPipelineWithTiles = "Render (1 encoder,  1 draw/layer, tile memory)"
         case computePipeline = "Compute (1 dispatch/layer)"
         case computeTiledPipeline = "Compute (1 dispatch/layer, 4 tiles)"
-        case computedAggregatedPipeline = "Compute (1 dispatch, monolithic kernel)"
+        case computedMonolithicPipeline = "Compute (1 dispatch, monolithic kernel)"
         case coreImagePipeline = "Core Image"
         
         var id: Self { self }
@@ -31,21 +31,28 @@ struct ContentView: View {
     
     @State private var token: OSSignpostIntervalState = signposter.beginInterval("Renderer", "\(Renderer.renderPipeline.rawValue)")
     @State private var displayedRenderer: Renderer = .renderPipeline
-    @State private var serialGPUWork: Bool = true
+    @State private var sequentialCommandBuffers: Bool = false
+    @State private var maxDrawableCount = 2
     
     var body: some View {
         VStack(spacing: 0) {
             HStack {
-                Toggle(isOn: $serialGPUWork) {
-                    Text("Serial GPU work")
-                }
-                .disabled(displayedRenderer == .coreImagePipeline)
-                
-                Divider()
                 Picker("Pipeline:", selection: $displayedRenderer) {
                     ForEach(Renderer.allCases) {
                         Text($0.rawValue).tag($0)
                     }
+                }
+                
+                Divider()
+                Toggle(isOn: $sequentialCommandBuffers) {
+                    Text("Sequential command buffers")
+                }
+                .disabled(displayedRenderer == .coreImagePipeline)
+                
+                Divider()
+                Picker("Max drawable count:", selection: $maxDrawableCount) {
+                    Text("2").tag(2)
+                    Text("3").tag(3)
                 }
             }
             .padding(pickerPadding)
@@ -53,19 +60,40 @@ struct ContentView: View {
             
             switch displayedRenderer {
             case .renderPipeline:
-                MetalView<RenderPipelineRenderer>(serialGPUWork: serialGPUWork)
+                MetalView<RenderPipelineRenderer>(
+                    sequentialCommandBuffers: sequentialCommandBuffers,
+                    maximumDrawableCount: maxDrawableCount
+                )
             case .renderPipelineFusedEncoder:
-                MetalView<RenderPipelineFusedEncoderRenderer>(serialGPUWork: serialGPUWork)
+                MetalView<RenderPipelineFusedEncoderRenderer>(
+                    sequentialCommandBuffers: sequentialCommandBuffers,
+                    maximumDrawableCount: maxDrawableCount
+                )
             case .renderPipelineWithTiles:
-                MetalView<RenderPipelineWithTileMemoryRenderer>(serialGPUWork: serialGPUWork)
+                MetalView<RenderPipelineWithTileMemoryRenderer>(
+                    sequentialCommandBuffers: sequentialCommandBuffers,
+                    maximumDrawableCount: maxDrawableCount
+                )
             case .computePipeline:
-                MetalView<ComputePipelineRenderer>(serialGPUWork: serialGPUWork)
+                MetalView<ComputePipelineRenderer>(
+                    sequentialCommandBuffers: sequentialCommandBuffers,
+                    maximumDrawableCount: maxDrawableCount
+                )
             case .computeTiledPipeline:
-                MetalView<ComputeTiledPipelineRenderer>(serialGPUWork: serialGPUWork)
-            case .computedAggregatedPipeline:
-                MetalView<ComputeAggregatedPipelineRenderer>(serialGPUWork: serialGPUWork)
+                MetalView<ComputeTiledPipelineRenderer>(
+                    sequentialCommandBuffers: sequentialCommandBuffers,
+                    maximumDrawableCount: maxDrawableCount
+                )
+            case .computedMonolithicPipeline:
+                MetalView<ComputeMonolithicPipelineRenderer>(
+                    sequentialCommandBuffers: sequentialCommandBuffers,
+                    maximumDrawableCount: maxDrawableCount
+                )
             case .coreImagePipeline:
-                MetalView<CoreImagePipelineRenderer>(serialGPUWork: true)
+                MetalView<CoreImagePipelineRenderer>(
+                    sequentialCommandBuffers: true,
+                    maximumDrawableCount: maxDrawableCount
+                )
             }
         }
         .onChange(of: displayedRenderer) { oldValue, newValue in
@@ -73,7 +101,7 @@ struct ContentView: View {
             token = signposter.beginInterval("Renderer", "\(newValue.rawValue)")
             
             if newValue == .coreImagePipeline {
-                serialGPUWork = true
+                sequentialCommandBuffers = true
             }
         }
     }

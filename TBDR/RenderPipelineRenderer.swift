@@ -143,7 +143,3 @@ final class RenderPipelineRenderer : NSObject, MTLRenderer {
         drawCalls += 1
     }
 }
-
-#Preview {
-    MetalView<RenderPipelineRenderer>(serialGPUWork: true)
-}

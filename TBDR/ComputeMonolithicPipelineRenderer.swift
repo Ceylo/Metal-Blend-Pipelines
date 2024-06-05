@@ -1,5 +1,5 @@
 //
-//  ComputeAggregatedPipelineRenderer.swift
+//  ComputeMonolithicPipelineRenderer.swift
 //  TBDR
 //
 //  Created by Ceylo on 15/05/2024.
@@ -8,7 +8,7 @@
 import SwiftUI
 import MetalKit
 
-final class ComputeAggregatedPipelineRenderer : NSObject, MTLRenderer {
+final class ComputeMonolithicPipelineRenderer : NSObject, MTLRenderer {
     let drawablePixelFormat: MTLPixelFormat = .bgra8Unorm_srgb
     let drawableIsWritable: Bool = true
     let drawableColorSpace: CGColorSpace = .init(name: CGColorSpace.sRGB)!
@@ -70,8 +70,4 @@ final class ComputeAggregatedPipelineRenderer : NSObject, MTLRenderer {
         encoder.dispatchThreadsForWorking(on: output, with: pipelineState)
         dispatchCalls += 1
     }
-}
-
-#Preview {
-    MetalView<ComputeAggregatedPipelineRenderer>(serialGPUWork: true)
 }

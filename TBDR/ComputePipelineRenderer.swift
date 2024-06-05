@@ -100,7 +100,3 @@ final class ComputePipelineRenderer : NSObject, MTLRenderer {
         dispatchCalls += 1
     }
 }
-
-#Preview {
-    MetalView<ComputePipelineRenderer>(serialGPUWork: true)
-}

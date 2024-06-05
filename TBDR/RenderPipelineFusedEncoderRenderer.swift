@@ -171,7 +171,3 @@ final class RenderPipelineFusedEncoderRenderer : NSObject, MTLRenderer {
         drawCalls += 1
     }
 }
-
-#Preview {
-    MetalView<RenderPipelineFusedEncoderRenderer>(serialGPUWork: true)
-}

@@ -174,7 +174,3 @@ final class RenderPipelineWithTileMemoryRenderer : NSObject, MTLRenderer {
         drawCalls += 1
     }
 }
-
-#Preview {
-    MetalView<RenderPipelineWithTileMemoryRenderer>(serialGPUWork: true)
-}

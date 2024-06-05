@@ -144,7 +144,3 @@ final class ComputeTiledPipelineRenderer : NSObject, MTLRenderer {
         dispatchCalls += 1
     }
 }
-
-#Preview {
-    MetalView<ComputeTiledPipelineRenderer>(serialGPUWork: true)
-}
