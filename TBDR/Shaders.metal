@@ -7,6 +7,7 @@
 
 #include <metal_stdlib>
 #include "Shared.hpp"
+#include <MTIShaderLib.h>
 
 using namespace metal;
 
@@ -137,3 +138,15 @@ fragment FragmentIO tiledFragmentFunc(const Vertex vert [[stage_in]],
     
     return io.UpdatingTile(passIndex, res);
 }
+
+
+fragment half4 metalPetalBlend(metalpetal::VertexOut vertexIn [[ stage_in ]],
+                               texture2d<half, access::sample> tex1 [[ texture(0) ]],
+                               sampler s [[ sampler(0) ]],
+                               texture2d<half, access::sample> tex2 [[ texture(1) ]])
+{
+    const auto p1 = tex1.sample(s, vertexIn.textureCoordinate);
+    const auto p2 = tex2.sample(s, vertexIn.textureCoordinate);
+    return (p1 + p2) / attenuation;
+}
+

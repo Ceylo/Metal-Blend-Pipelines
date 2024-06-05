@@ -25,6 +25,7 @@ struct ContentView: View {
         case computeTiledPipeline = "Compute (1 dispatch/layer, 4 tiles)"
         case computedMonolithicPipeline = "Compute (1 dispatch, monolithic kernel)"
         case coreImagePipeline = "Core Image"
+        case metalPetalPipeline = "Metal Petal"
         
         var id: Self { self }
     }
@@ -47,7 +48,7 @@ struct ContentView: View {
                 Toggle(isOn: $sequentialCommandBuffers) {
                     Text("Sequential command buffers")
                 }
-                .disabled(displayedRenderer == .coreImagePipeline)
+                .disabled(!displayedRenderer.supportsSequentialCommandBuffers)
                 
                 Divider()
                 Picker("Max drawable count:", selection: $maxDrawableCount) {
@@ -94,15 +95,36 @@ struct ContentView: View {
                     sequentialCommandBuffers: true,
                     maximumDrawableCount: maxDrawableCount
                 )
+            case .metalPetalPipeline:
+                MetalView<MetalPetalPipelineRenderer>(
+                    sequentialCommandBuffers: sequentialCommandBuffers,
+                    maximumDrawableCount: maxDrawableCount
+                )
             }
         }
         .onChange(of: displayedRenderer) { oldValue, newValue in
             signposter.endInterval("Renderer", token, "\(oldValue.rawValue)")
             token = signposter.beginInterval("Renderer", "\(newValue.rawValue)")
             
-            if newValue == .coreImagePipeline {
+            switch newValue {
+            case .coreImagePipeline:
                 sequentialCommandBuffers = true
+            case .metalPetalPipeline:
+                sequentialCommandBuffers = false
+            default:
+                break
             }
+        }
+    }
+}
+
+extension ContentView.Renderer {
+    var supportsSequentialCommandBuffers: Bool {
+        switch self {
+        case .coreImagePipeline, .metalPetalPipeline:
+            false
+        default:
+            true
         }
     }
 }
