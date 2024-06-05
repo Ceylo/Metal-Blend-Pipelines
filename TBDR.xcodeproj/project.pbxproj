@@ -26,6 +26,7 @@
 		87FD6E402C10707B0077E7E7 /* GPUImage3PipelineRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87FD6E3F2C10707B0077E7E7 /* GPUImage3PipelineRenderer.swift */; };
 		87FD6E452C107A910077E7E7 /* MetalPetal in Frameworks */ = {isa = PBXBuildFile; productRef = 87FD6E442C107A910077E7E7 /* MetalPetal */; };
 		87FD6E472C107AA50077E7E7 /* MetalPetalPipelineRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87FD6E462C107AA50077E7E7 /* MetalPetalPipelineRenderer.swift */; };
+		87FD6E492C10BC500077E7E7 /* BBMetalImagePipelineRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87FD6E482C10BC500077E7E7 /* BBMetalImagePipelineRenderer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -81,6 +82,7 @@
 		87B92CB92C0A08BD00DB0997 /* ComputeTiledPipelineRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComputeTiledPipelineRenderer.swift; sourceTree = "<group>"; };
 		87FD6E3F2C10707B0077E7E7 /* GPUImage3PipelineRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GPUImage3PipelineRenderer.swift; sourceTree = "<group>"; };
 		87FD6E462C107AA50077E7E7 /* MetalPetalPipelineRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalPetalPipelineRenderer.swift; sourceTree = "<group>"; };
+		87FD6E482C10BC500077E7E7 /* BBMetalImagePipelineRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BBMetalImagePipelineRenderer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -128,6 +130,7 @@
 				8749742D2C00EC0100EFD546 /* CoreImagePipelineRenderer.swift */,
 				87FD6E3F2C10707B0077E7E7 /* GPUImage3PipelineRenderer.swift */,
 				87FD6E462C107AA50077E7E7 /* MetalPetalPipelineRenderer.swift */,
+				87FD6E482C10BC500077E7E7 /* BBMetalImagePipelineRenderer.swift */,
 				8724F5E62BF4C7CD00890EAF /* Shaders.metal */,
 				87B8BDEB2C0392D600A84398 /* Shaders.ci.metal */,
 				8724F8402BF4F45700890EAF /* Bridge.hpp */,
@@ -236,6 +239,7 @@
 				8724F5E72BF4C7CD00890EAF /* Shaders.metal in Sources */,
 				879B8AF12BFE3CAA00D06497 /* RenderPipelineFusedEncoderRenderer.swift in Sources */,
 				8758DC812C09E1F100F53F21 /* RenderPipelineWithTileMemoryRenderer.swift in Sources */,
+				87FD6E492C10BC500077E7E7 /* BBMetalImagePipelineRenderer.swift in Sources */,
 				87B92CBA2C0A08BD00DB0997 /* ComputeTiledPipelineRenderer.swift in Sources */,
 				872E206C2C0FB869004F529B /* ContentView.swift in Sources */,
 				87AC36F62BF7B5D9007A65E6 /* ComputePipelineRenderer.swift in Sources */,
