@@ -13,7 +13,13 @@ The different pipelines get compared in terms of speed and memory usage.
 This data alone, common for all methods, uses ~1.5GB.
 The blend operation is a basic `(background + foreground) / 1.1`.
 
-The results listed below are generated on a 2021 MacBook Pro 14" with 32GB memory and M1 Pro Soc, 16 GPU cores, running macOS 14.5. Image result is displayed in a full size window on a UHD@144Hz display, making the Metal drawable 3840x1836 pixels.
+The results listed later below are generated on a 2021 MacBook Pro 14" with 32GB memory and M1 Pro Soc, 16 GPU cores, running macOS 14.5. Image result is displayed in a full size window on a UHD@144Hz display, making the Metal drawable 3840x1836 pixels.
+
+<div align="center">
+  <img width="1070" alt="image" src="https://github.com/Ceylo/Metal-Blend-Pipelines/assets/451334/afc9d421-6eee-4fc2-8ba9-53b09ed0a11b">
+  
+  *A preview of the testing app*
+</div>
 
 ## Pipelines
 
@@ -89,7 +95,7 @@ If we check the behavior in Instruments with Metal System Trace, we can see the 
 
 Purple is window composition from macOS's WindowServer process. Orange is the work for a frame, and green the work for another frame. The key part is that we see the vertex function for two frames being executed at the very beginning. Once geometry for the orange frame is done, fragment function starts, then same for the green frame. This means that we start generating both frames almost at the same time, but the orange frame will be ready for display in a much shorter delay than the green frame. This can become even worse when Core Animation decides that it should add a 3rd frame in the pipeline to do triple-buffering.
 
-So I decided to add synchronization so that the driver properly finishes one command buffer before starting the next one. And this gave a stable framerate for a minor cost in fps.
+So I decided to add synchronization so that the driver properly finishes one command buffer before starting the next one. And this gave a stable framerate for a minor cost in fps (or actually an improvement in the case of the monolithic compute kernel).
 <img width="914" alt="image" src="https://github.com/Ceylo/Metal-Blend-Pipelines/assets/451334/623ba6df-256f-44a5-ab99-5a7ed8f4db06">
 <div align="center">
   <img width="238" alt="image" src="https://github.com/Ceylo/Metal-Blend-Pipelines/assets/451334/bf072dca-16ac-4aff-8629-14e09d8206fc">
