@@ -59,7 +59,7 @@ _TODO_
 
 ### [Metal Petal framework](https://github.com/MetalPetal/MetalPetal)
 
-This is a third-party framework very similar to Apple's' Core Image. However it relies on fragment shaders in addition to compute kernels, and claims to be faster than Core Image.
+This is a third-party framework very similar to Apple's Core Image. However it relies on fragment shaders in addition to compute kernels, and claims to be faster than Core Image.
 The pipeline setup is almost identical to the one in Core Image, except for a few points:
 - We don't need to (un)flip the output image
 - The API makes it safer to work with unpremultiplied alpha textures

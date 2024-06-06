@@ -20,7 +20,7 @@ struct ContentView: View {
     enum Renderer: String, Hashable, Identifiable, CaseIterable {
         case renderPipeline = "Render (1 encoder/layer)"
         case renderPipelineFusedEncoder = "Render (1 encoder, 1 draw/layer)"
-        case renderPipelineWithTiles = "Render (1 encoder,  1 draw/layer, tile memory)"
+        case renderPipelineWithTiles = "Render (1 encoder, 1 draw/layer, tile memory)"
         case computePipeline = "Compute (1 dispatch/layer)"
         case computeTiledPipeline = "Compute (1 dispatch/layer, 4 tiles)"
         case computedMonolithicPipeline = "Compute (1 dispatch, monolithic kernel)"
