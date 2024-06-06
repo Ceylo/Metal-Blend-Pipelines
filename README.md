@@ -43,7 +43,9 @@ Same as with above compute pipeline, except that a fragment shader is used inste
 
 ### Render with tile memory (1 encoder, 1 draw/layer)
 
-This one is a variation of the above render pipeline. However using tile memory implies using memoryless textures, which only "persist" within a single `MTLRenderCommandEncoder`. So we need to find a way not to run into the undefined behavior caused by reading & writing to the same texture. Documentation is lacking on the topic so I used best guess. What I ended up doing is using 2 memoryless textures, and swapping them on each subpass of the render encoder. So on the 2nd blend we read from `memoryless1` and `layer2`, and write to `memoryless2`. On the next blend we read from `memoryless2` and `layer3`, and write to `memoryless1`. I could not find yet documentation telling that this approach is well defined behavior, but on all devices I tried this gave correct and stable results.
+This one is a variation of the above render pipeline. However using tile memory implies using memoryless textures, which only "persist" within a single `MTLRenderCommandEncoder`. So we need to find a way not to run into the undefined behavior caused by reading & writing to the same texture. Documentation is lacking on the topic so I used best guess. What I ended up doing is using 2 memoryless textures, and swapping them on each subpass of the render encoder. So on the 2nd blend we read from `memoryless1` and `layer2`, and write to `memoryless2`. On the next blend we read from `memoryless2` and `layer3`, and write to `memoryless1`.
+> [!IMPORTANT]
+> I could not find yet documentation stating that this approach is well defined behavior, although on all devices I tried this gave correct and stable results.
 
 ### Render (1 encoder, 1 draw/layer)
 
@@ -52,8 +54,6 @@ Now successful in using a single `MTLRenderCommandEncoder` to blend the 50 layer
 ### Compute (1 encoder, 1 dispatch/layer, 4 tiles)
 
 After having tried render pipelines, let's get back to something closer to what Core Image is doing: a solution fully based on compute kernels. We found out that `MTLComputeCommandEncoder` allows us to use a single encoder out of the box because it guarantees dependencies between reads and writes of several dispatches. So let's try to allow Metal drivers to hide synchronization latency by running 4 fully independent pipelines, by splitting the output in 4 tiles, and only writing to a common `MTLTexture` in the final blend. This shoud allow the 4 pipeline to run in parallel, and one pipeline to move forward while the other waits on memory writes.
-
-_Hint: this didn't help 🙃._
 
 ### Monolithic compute (1 encoder, 1 dispatch)
 
@@ -78,12 +78,15 @@ Now that we know what we're comparing, let's see results!
 <img width="804" alt="Memory usage" src="https://github.com/Ceylo/Metal-Blend-Pipelines/assets/451334/fe17909b-ac3c-4a19-98ce-24e774e03a33">
 <img width="1037" alt="Results table" src="https://github.com/Ceylo/Metal-Blend-Pipelines/assets/451334/189762f5-3cae-4812-ae8a-c5b7a6660ee6">
 
+## Comments
 So there is a lot of information packed in there:
 - The first thing that you can notice is that the Core Image pipeline is a good candidate but not the best if your main concern is speed. And if you care about memory usage, it's the worst by far.
 - The naive compute kernels behave pretty badly, and splitting the work into 4 independent branches didn't help.
 - On the other hand, the monolithic compute kernel, which is supposed to do the same as Core Image, is actually 30% faster than Apple's implementation! Obviously the biggest downside is that everything is hardcoded and in a real app you'd want to be able to dynamically switch the blend operations or the number of layers involved. On this matter, stitchable functions should give identical speed, all while removing these two constraints, BUT removing the ability to debug such stitched compute kernels (at least as of Xcode 15.4).
 - Now the much more interesting results in my opinion are with render commands. The solution with an encoder/layer is not so interesting: slower than Core Image and Metal Petal. On the other hand, the solution with a single encoder performs better than all other solutions, and it's still debuggable, and fully dynamic! 🎉 Its main downside is the slightly more tricky workflow in the fragment shader that forces you to do ping pong between two color attachments. A nice bonus is that the variation with tile memory is the one using the smallest amount of memory, along with the monolithic kernel. That one doesn't need any intermediate texture, while the render pipeline does, but since it's taking advantage of memoryless textures, it's not adding up on the app memory usage. And if we want to keep compatibility with Intel Macs, we just need to change one line of code and switch to a regular `.private` texture type.
+- One more thing not visible in above results is that some pipelines will automatically skip computations for hidden fragments while some other won't. Basically all render pipelines that use a single encoder, or compute pipelines that use a single dispatch benefit from this. Same for Core Image, but NOT Metal Petal. This can be a nice speed boost "for free" if you render contents that's bigger than what you can display.
 
+## Stability issues
 Now there's one more thing that I noticed while profiling all this: some pipelines were giving very stable times while others weren't.
 <div align="center">
   <img width="238" alt="Results table" src="https://github.com/Ceylo/Metal-Blend-Pipelines/assets/451334/b7246ae3-c4dd-43c6-91b1-dc63bd10e925">
