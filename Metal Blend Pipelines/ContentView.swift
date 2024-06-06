@@ -1,6 +1,6 @@
 //
 //  ContentView.swift
-//  TBDR
+//  Metal Blend Pipelines
 //
 //  Created by Ceylo on 04/06/2024.
 //
@@ -8,7 +8,7 @@
 import SwiftUI
 import os
 
-let signposter = OSSignposter(subsystem: "TBDR", category: "Renderer")
+let signposter = OSSignposter(subsystem: "Metal Blend Pipelines", category: "Renderer")
 
 struct ContentView: View {
 #if os(macOS)

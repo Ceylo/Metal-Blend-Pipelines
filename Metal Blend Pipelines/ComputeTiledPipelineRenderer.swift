@@ -1,6 +1,6 @@
 //
 //  ComputeTiledPipelineRenderer.swift
-//  TBDR
+//  Metal Blend Pipelines
 //
 //  Created by Ceylo on 31/05/2024.
 //

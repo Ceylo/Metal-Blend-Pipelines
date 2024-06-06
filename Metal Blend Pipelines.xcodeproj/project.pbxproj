@@ -8,9 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		871476F72C0E123C00FFB317 /* ComputeMonolithicPipelineRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 871476F62C0E123C00FFB317 /* ComputeMonolithicPipelineRenderer.swift */; };
-		8724F5D62BF4C04700890EAF /* TBDRApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8724F5D52BF4C04700890EAF /* TBDRApp.swift */; };
+		8724F5D62BF4C04700890EAF /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8724F5D52BF4C04700890EAF /* App.swift */; };
 		8724F5DA2BF4C04800890EAF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8724F5D92BF4C04800890EAF /* Assets.xcassets */; };
-		8724F5DD2BF4C04800890EAF /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8724F5DC2BF4C04800890EAF /* Preview Assets.xcassets */; };
 		8724F5E52BF4C06400890EAF /* RenderPipelineRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8724F5E42BF4C06400890EAF /* RenderPipelineRenderer.swift */; };
 		8724F5E72BF4C7CD00890EAF /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 8724F5E62BF4C7CD00890EAF /* Shaders.metal */; };
 		872E206C2C0FB869004F529B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 872E206B2C0FB869004F529B /* ContentView.swift */; };
@@ -62,11 +61,10 @@
 
 /* Begin PBXFileReference section */
 		871476F62C0E123C00FFB317 /* ComputeMonolithicPipelineRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComputeMonolithicPipelineRenderer.swift; sourceTree = "<group>"; };
-		8724F5D22BF4C04700890EAF /* TBDR.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TBDR.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		8724F5D52BF4C04700890EAF /* TBDRApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TBDRApp.swift; sourceTree = "<group>"; };
+		8724F5D22BF4C04700890EAF /* Metal Blend Pipelines.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Metal Blend Pipelines.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		8724F5D52BF4C04700890EAF /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
 		8724F5D92BF4C04800890EAF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		8724F5DC2BF4C04800890EAF /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		8724F5DE2BF4C04800890EAF /* TBDR.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TBDR.entitlements; sourceTree = "<group>"; };
+		8724F5DE2BF4C04800890EAF /* Metal Blend Pipelines.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Metal Blend Pipelines.entitlements"; sourceTree = "<group>"; };
 		8724F5E42BF4C06400890EAF /* RenderPipelineRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenderPipelineRenderer.swift; sourceTree = "<group>"; };
 		8724F5E62BF4C7CD00890EAF /* Shaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Shaders.metal; sourceTree = "<group>"; };
 		8724F83F2BF4F31400890EAF /* Shared.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Shared.hpp; sourceTree = "<group>"; };
@@ -103,7 +101,7 @@
 			isa = PBXGroup;
 			children = (
 				87FD6E4A2C10BD990077E7E7 /* README.md */,
-				8724F5D42BF4C04700890EAF /* TBDR */,
+				8724F5D42BF4C04700890EAF /* Metal Blend Pipelines */,
 				8724F5D32BF4C04700890EAF /* Products */,
 			);
 			sourceTree = "<group>";
@@ -111,15 +109,15 @@
 		8724F5D32BF4C04700890EAF /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				8724F5D22BF4C04700890EAF /* TBDR.app */,
+				8724F5D22BF4C04700890EAF /* Metal Blend Pipelines.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		8724F5D42BF4C04700890EAF /* TBDR */ = {
+		8724F5D42BF4C04700890EAF /* Metal Blend Pipelines */ = {
 			isa = PBXGroup;
 			children = (
-				8724F5D52BF4C04700890EAF /* TBDRApp.swift */,
+				8724F5D52BF4C04700890EAF /* App.swift */,
 				872E206B2C0FB869004F529B /* ContentView.swift */,
 				87AC36F92BFB6681007A65E6 /* MetalView.swift */,
 				87AC36FB2BFB7773007A65E6 /* MetalHelper.swift */,
@@ -138,26 +136,17 @@
 				8724F8402BF4F45700890EAF /* Bridge.hpp */,
 				8724F83F2BF4F31400890EAF /* Shared.hpp */,
 				8724F5D92BF4C04800890EAF /* Assets.xcassets */,
-				8724F5DE2BF4C04800890EAF /* TBDR.entitlements */,
-				8724F5DB2BF4C04800890EAF /* Preview Content */,
+				8724F5DE2BF4C04800890EAF /* Metal Blend Pipelines.entitlements */,
 			);
-			path = TBDR;
-			sourceTree = "<group>";
-		};
-		8724F5DB2BF4C04800890EAF /* Preview Content */ = {
-			isa = PBXGroup;
-			children = (
-				8724F5DC2BF4C04800890EAF /* Preview Assets.xcassets */,
-			);
-			path = "Preview Content";
+			path = "Metal Blend Pipelines";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		8724F5D12BF4C04700890EAF /* TBDR */ = {
+		8724F5D12BF4C04700890EAF /* Metal Blend Pipelines */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 8724F5E12BF4C04800890EAF /* Build configuration list for PBXNativeTarget "TBDR" */;
+			buildConfigurationList = 8724F5E12BF4C04800890EAF /* Build configuration list for PBXNativeTarget "Metal Blend Pipelines" */;
 			buildPhases = (
 				8724F5CE2BF4C04700890EAF /* Sources */,
 				8724F5CF2BF4C04700890EAF /* Frameworks */,
@@ -169,13 +158,13 @@
 			);
 			dependencies = (
 			);
-			name = TBDR;
+			name = "Metal Blend Pipelines";
 			packageProductDependencies = (
 				879B8AEE2BFBA8E800D06497 /* SwiftImage */,
 				87FD6E442C107A910077E7E7 /* MetalPetal */,
 			);
-			productName = TBDR;
-			productReference = 8724F5D22BF4C04700890EAF /* TBDR.app */;
+			productName = "Metal Blend Pipelines";
+			productReference = 8724F5D22BF4C04700890EAF /* Metal Blend Pipelines.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -193,7 +182,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 8724F5CD2BF4C04700890EAF /* Build configuration list for PBXProject "TBDR" */;
+			buildConfigurationList = 8724F5CD2BF4C04700890EAF /* Build configuration list for PBXProject "Metal Blend Pipelines" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -210,7 +199,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				8724F5D12BF4C04700890EAF /* TBDR */,
+				8724F5D12BF4C04700890EAF /* Metal Blend Pipelines */,
 			);
 		};
 /* End PBXProject section */
@@ -220,7 +209,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8724F5DD2BF4C04800890EAF /* Preview Assets.xcassets in Resources */,
 				8724F5DA2BF4C04800890EAF /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -246,7 +234,7 @@
 				872E206C2C0FB869004F529B /* ContentView.swift in Sources */,
 				87AC36F62BF7B5D9007A65E6 /* ComputePipelineRenderer.swift in Sources */,
 				87FD6E472C107AA50077E7E7 /* MetalPetalPipelineRenderer.swift in Sources */,
-				8724F5D62BF4C04700890EAF /* TBDRApp.swift in Sources */,
+				8724F5D62BF4C04700890EAF /* App.swift in Sources */,
 				87FD6E402C10707B0077E7E7 /* GPUImage3PipelineRenderer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -377,11 +365,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = TBDR/TBDR.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "Metal Blend Pipelines/Metal Blend Pipelines.entitlements";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"TBDR/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = 3BF75NMSEQ;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -394,12 +384,13 @@
 				);
 				MARKETING_VERSION = 1.0;
 				MTL_HEADER_SEARCH_PATHS = "$(HEADER_SEARCH_PATHS)";
-				PRODUCT_BUNDLE_IDENTIFIER = ceylo.TBDR;
+				PRODUCT_BUNDLE_IDENTIFIER = "ceylo.metal-blend-pipelines";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = TBDR/Bridge.hpp;
+				SWIFT_OBJC_BRIDGING_HEADER = "Metal Blend Pipelines/Bridge.hpp";
 				SWIFT_OBJC_INTEROP_MODE = objcxx;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -411,11 +402,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = TBDR/TBDR.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "Metal Blend Pipelines/Metal Blend Pipelines.entitlements";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"TBDR/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "";
 				DEVELOPMENT_TEAM = 3BF75NMSEQ;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
@@ -428,12 +421,13 @@
 				);
 				MARKETING_VERSION = 1.0;
 				MTL_HEADER_SEARCH_PATHS = "$(HEADER_SEARCH_PATHS)";
-				PRODUCT_BUNDLE_IDENTIFIER = ceylo.TBDR;
+				PRODUCT_BUNDLE_IDENTIFIER = "ceylo.metal-blend-pipelines";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = TBDR/Bridge.hpp;
+				SWIFT_OBJC_BRIDGING_HEADER = "Metal Blend Pipelines/Bridge.hpp";
 				SWIFT_OBJC_INTEROP_MODE = objcxx;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -443,7 +437,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		8724F5CD2BF4C04700890EAF /* Build configuration list for PBXProject "TBDR" */ = {
+		8724F5CD2BF4C04700890EAF /* Build configuration list for PBXProject "Metal Blend Pipelines" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				8724F5DF2BF4C04800890EAF /* Debug */,
@@ -452,7 +446,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		8724F5E12BF4C04800890EAF /* Build configuration list for PBXNativeTarget "TBDR" */ = {
+		8724F5E12BF4C04800890EAF /* Build configuration list for PBXNativeTarget "Metal Blend Pipelines" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				8724F5E22BF4C04800890EAF /* Debug */,

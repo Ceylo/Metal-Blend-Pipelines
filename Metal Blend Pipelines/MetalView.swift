@@ -1,6 +1,6 @@
 //
 //  MetalView.swift
-//  TBDR
+//  Metal Blend Pipelines
 //
 //  Created by Ceylo on 20/05/2024.
 //

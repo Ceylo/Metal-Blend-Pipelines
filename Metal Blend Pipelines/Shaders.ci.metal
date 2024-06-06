@@ -1,6 +1,6 @@
 //
 //  Shaders.ci.metal
-//  TBDR
+//  Metal Blend Pipelines
 //
 //  Created by Ceylo on 26/05/2024.
 //

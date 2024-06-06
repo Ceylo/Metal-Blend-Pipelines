@@ -1,6 +1,6 @@
 //
 //  BBMetalImagePipelineRenderer.swift
-//  TBDR
+//  Metal Blend Pipelines
 //
 //  Created by Ceylo on 05/06/2024.
 //

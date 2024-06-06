@@ -16,9 +16,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "8724F5D12BF4C04700890EAF"
-               BuildableName = "TBDR.app"
-               BlueprintName = "TBDR"
-               ReferencedContainer = "container:TBDR.xcodeproj">
+               BuildableName = "Metal Blend Pipelines.app"
+               BlueprintName = "Metal Blend Pipelines"
+               ReferencedContainer = "container:Metal Blend Pipelines.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -46,9 +46,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "8724F5D12BF4C04700890EAF"
-            BuildableName = "TBDR.app"
-            BlueprintName = "TBDR"
-            ReferencedContainer = "container:TBDR.xcodeproj">
+            BuildableName = "Metal Blend Pipelines.app"
+            BlueprintName = "Metal Blend Pipelines"
+            ReferencedContainer = "container:Metal Blend Pipelines.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -63,9 +63,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "8724F5D12BF4C04700890EAF"
-            BuildableName = "TBDR.app"
-            BlueprintName = "TBDR"
-            ReferencedContainer = "container:TBDR.xcodeproj">
+            BuildableName = "Metal Blend Pipelines.app"
+            BlueprintName = "Metal Blend Pipelines"
+            ReferencedContainer = "container:Metal Blend Pipelines.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
