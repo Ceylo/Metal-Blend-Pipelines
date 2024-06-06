@@ -83,6 +83,7 @@
 		87FD6E3F2C10707B0077E7E7 /* GPUImage3PipelineRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GPUImage3PipelineRenderer.swift; sourceTree = "<group>"; };
 		87FD6E462C107AA50077E7E7 /* MetalPetalPipelineRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MetalPetalPipelineRenderer.swift; sourceTree = "<group>"; };
 		87FD6E482C10BC500077E7E7 /* BBMetalImagePipelineRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BBMetalImagePipelineRenderer.swift; sourceTree = "<group>"; };
+		87FD6E4A2C10BD990077E7E7 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,6 +102,7 @@
 		8724F5C92BF4C04700890EAF = {
 			isa = PBXGroup;
 			children = (
+				87FD6E4A2C10BD990077E7E7 /* README.md */,
 				8724F5D42BF4C04700890EAF /* TBDR */,
 				8724F5D32BF4C04700890EAF /* Products */,
 			);
