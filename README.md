@@ -66,12 +66,38 @@ The pipeline setup is almost identical to the one in Core Image, except for a fe
 - We can't tell it to use our already existing `MTLCommandBuffer`. It will always create its own, from its own `MTLCommandQueue`. This prevents us from controlling how the Metal Petal shaders will be executed in the middle of our own Metal pipeline.
 
 ## Results
+Now that we know what we're comparing, let's see results!
 
-## Insights
+<img width="808" alt="Frame times" src="https://github.com/Ceylo/Metal-Blend-Pipelines/assets/451334/45172207-46fe-4541-962b-55b5a4041f47">
+<img width="804" alt="Memory usage" src="https://github.com/Ceylo/Metal-Blend-Pipelines/assets/451334/fe17909b-ac3c-4a19-98ce-24e774e03a33">
+<img width="1037" alt="Results table" src="https://github.com/Ceylo/Metal-Blend-Pipelines/assets/451334/189762f5-3cae-4812-ae8a-c5b7a6660ee6">
 
-sequential command buffers
-drawable bottleneck
+So there is a lot of information packed in there:
+- The first thing that you can notice is that the Core Image pipeline is a good candidate but not the best if your main concern is speed. And if you care about memory usage, it's the worst by far.
+- The naive compute kernels behave pretty badly, and splitting the work into 4 independent branches didn't help.
+- On the other hand, the monolithic compute kernel, which is supposed to do the same as Core Image, is actually 30% faster than Apple's implementation! Obviously the biggest downside is that everything is hardcoded and in a real app you'd want to be able to dynamically switch the blend operations or the number of layers involved. On this matter, stitchable functions should give identical speed, all while removing these two constraints, BUT removing the ability to debug such stitched compute kernels (at least as of Xcode 15.4).
+- Now the much more interesting results in my opinion are with render commands. The solution with an encoder/layer is not so interesting: slower than Core Image and Metal Petal. On the other hand, the solution with a single encoder performs better than all other solutions, and it's still debuggable, and fully dynamic! 🎉 Its main downside is the slightly more tricky workflow in the fragment shader that forces you to do ping pong between two color attachments. A nice bonus is that the variation with tile memory is the one using the smallest amount of memory, along with the monolithic kernel. That one doesn't need any intermediate texture, while the render pipeline does, but since it's taking advantage of memoryless textures, it's not adding up on the app memory usage. And if we want to keep compatibility with Intel Macs, we just need to change one line of code and switch to a regular `.private` texture type.
 
-## Sources
+Now there's one more thing that I noticed while profiling all this: some pipelines were giving very stable times while others weren't.
+<div align="center">
+  <img width="238" alt="Results table" src="https://github.com/Ceylo/Metal-Blend-Pipelines/assets/451334/b7246ae3-c4dd-43c6-91b1-dc63bd10e925">
+  
+  *An unstable pipeline*
+</div>
+If we check the behavior in Instruments with Metal System Trace, we can see the following:
+<img width="953" alt="image" src="https://github.com/Ceylo/Metal-Blend-Pipelines/assets/451334/3c5f7d45-9d28-4410-a8c5-6001af4b1195">
+
+Purple is window composition from macOS's WindowServer process. Orange is the work for a frame, and green the work for another frame. The key part is that we see the vertex function for two frames being executed at the very beginning. Once geometry for the orange frame is done, fragment function starts, then same for the green frame. This means that we start generating both frames almost at the same time, but the orange frame will be ready for display in a much shorter delay than the green frame. This can become even worse when Core Animation decides that it should add a 3rd frame in the pipeline to do triple-buffering.
+
+So I decided to add synchronization so that the driver properly finishes one command buffer before starting the next one. And this gave a stable framerate for a minor cost in fps.
+<img width="914" alt="image" src="https://github.com/Ceylo/Metal-Blend-Pipelines/assets/451334/623ba6df-256f-44a5-ab99-5a7ed8f4db06">
+<div align="center">
+  <img width="238" alt="image" src="https://github.com/Ceylo/Metal-Blend-Pipelines/assets/451334/bf072dca-16ac-4aff-8629-14e09d8206fc">
+  
+  *A stable pipeline*
+</div>
+So now you know what "sequential command buffers" means in above results.
+
+## Resources
 
 [WWDC21: Create image processing apps powered by Apple Silicon](https://developer.apple.com/wwdc21/10153)
