@@ -15,6 +15,7 @@ using float4 = simd_float4;
 #define MTL(expression) expression
 #else
 #define MTL(expression)
+#include <sys/types.h>
 #endif
 
 struct Vertex {
